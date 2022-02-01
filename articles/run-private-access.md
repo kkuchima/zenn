@@ -3,7 +3,7 @@ title: "オンプレから Cloud Run にプライベートな経路でアクセ�
 emoji: "🐶"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [CloudRun, GCP]
-published: false
+published: true
 ---
 オンプレミス環境等から Cloud Interconnect / Cloud VPN を経由して Cloud Run で公開しているサービスにアクセスしたい！外部からはアクセスさせたくない！という方向けの記事です。
 
