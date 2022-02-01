@@ -22,7 +22,7 @@ published: true
 Private Google Access for On-prem は、オンプレミス等の環境から Google Cloud API に対するアクセスをプライベートな経路を使って実現することができる機能です。サポート対象の Google Cloud API / ドメインとして `*.run.app` も含まれています（現状カスタムドメインは含まれていないためご注意ください）。
 https://cloud.google.com/vpc/docs/private-google-access-hybrid
 
-一方、Private Service Connect (PSC) は PGA for On-prem 同様の機能を持っており、 Google Cloud API に対するアクセスをプライベートな経路を通すために使われます。その他、内部ロードバランサ経由で公開したサービスを他の利用者と直接的なネットワーク接続を構成することなくプライベートに利用できるようにする機能も持っています。詳細については以下ドキュメント / 解説ブログをご参照ください。
+一方、Private Service Connect (PSC) は Private Google Access for On-prem 同様の機能を持っており、 Google Cloud API に対するアクセスをプライベートな経路を通すために使われます。その他、内部ロードバランサ経由で公開したサービスを他の利用者と直接的なネットワーク接続を構成することなくプライベートに利用できるようにする機能も持っています。詳細については以下ドキュメント / 解説ブログをご参照ください。
 https://cloud.google.com/vpc/docs/configure-private-service-connect-apis
 https://medium.com/google-cloud-jp/psc-01-ac1aba58b161
 
