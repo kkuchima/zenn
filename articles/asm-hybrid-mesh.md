@@ -25,14 +25,14 @@ https://medium.com/google-cloud-jp/implementing-anthos-service-mesh-3d8205bf48ed
 
 ![Multi-cluster Meshの例](/images/hybrid-mesh/multi-cluster-mesh.png)
 
-クラスタレベルでの障害に関しては、[Multi-cluster Ingress](https://cloud.google.com/kubernetes-engine/docs/concepts/multi-cluster-ingress) や [Multi-cluster Gateway](https://cloud.google.com/kubernetes-engine/docs/how-to/deploying-multi-cluster-gateways) 等の機能や DNS を用いて外部クライアントから来るトラフィックをコントロールすることでクラスタ単位で failover することはできますが、サービス単位というさらに細かい粒度で failover をしたい場合などにマルチクラスタメッシュの機能が役に立ちます。
+クラスタレベルでの障害に関しては、[Multi-cluster Ingress](https://cloud.google.com/kubernetes-engine/docs/concepts/multi-cluster-ingress) や [Multi-cluster Gateway](https://cloud.google.com/kubernetes-engine/docs/how-to/deploying-multi-cluster-gateways) といった機能や DNS を用いて外部クライアントから来るトラフィックをコントロールすることでクラスタ単位で failover することはできますが、サービス単位というさらに細かい粒度で failover をしたい場合などにマルチクラスタメッシュの機能が役に立ちます。
 
 ちなみに Multi-cluster Ingress / Gateway とマルチクラスタメッシュ機能の併用も可能です。Multi-cluster Ingress / Gateway でクラスタ外 (外部クライアント等) からのトラフィック (North-South Traffic) をコントロールし、マルチクラスタメッシュでサービス間通信 (East-West Traffic) をコントロールする形になります。
 
 ![MCI + Multi-cluster Meshの例](/images/hybrid-mesh/multi-cluster-mesh-mci.png)
 
 今回はいわゆるハイブリッドクラウド環境間でのマルチクラスタメッシュを試してみます。  
-イメージとしては 2020 年の KubeCon で Walmart 社が発表していた事例のように、ハイブリッドクラウド環境間でサービス単位での Failover ができるようにマルチクラスタメッシュでサービス間通信をコントロールすることを目指します。  
+イメージとしては 2019 年の KubeCon で Walmart 社が発表していた事例のように、ハイブリッドクラウド環境間でサービス単位での Failover ができるようにマルチクラスタメッシュでサービス間通信をコントロールすることを目指します。  
 
 ![Walmart Hybrid Mesh](/images/hybrid-mesh/walmart-hybrid-mesh.png)
 
