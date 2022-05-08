@@ -208,7 +208,7 @@ spec:
     - CA として MeshCA を採用
 - オンプレミスと Google Cloud 環境を Cloud VPN で接続
     - VPN トンネル構築時に GKE の Node / Pod IP レンジをオンプレミス側に広告するよう構成 (IP マスカレード等の設定入れていない場合、GKE Pod IP レンジの広告ができていないと Endpoint discovery 時の通信が上手くいかないはず)
-    - オンプレ→Google Cloud の方向は Anthos ノードの IP レンジを広告 (Anthos はノード IP で SNAT するので)
+    - オンプレ→Google Cloud の方向は Anthos ノードの IP レンジを広告 (Anthos はノード IP レンジで SNAT するので)
 
 その他要件などについては以下ドキュメントもご参照ください。  
 https://cloud.google.com/service-mesh/docs/unified-install/multi-cloud-hybrid-mesh
