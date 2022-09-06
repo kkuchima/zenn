@@ -3,7 +3,7 @@ title: "Backup for GKE でクラスタ移行を試してみる"
 emoji: "🐢"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [GKE, GCP]
-published: false
+published: true
 ---
 
 # はじめに
