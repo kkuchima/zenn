@@ -20,7 +20,7 @@ GKE クラスタ内の Kubernetes オブジェクトや Persistent Volume をバ
 https://cloud.google.com/kubernetes-engine/docs/add-on/backup-for-gke/concepts/backup-for-gke
 
 Backup for GKE を有効化すると各種 Custom Resources や Backup for GKE agent (gkebackup-agent) がクラスタ内にデプロイされます。Backup for GKE agent はバックアップやリストア処理のオーケストレーションをしてくれるエージェントで、GKE Control Plane から K8s オブジェクトの情報を取得しアーカイブしたり、アプリケーションが利用している Persistent Volume のスナップショットを取得してくれます。  
-![Backup for GKE アーキテクチャ](/images/bfg-cluster-migration/bfg_arch.svg)
+![Backup for GKE アーキテクチャ](/images/bfg-cluster-migration/bfg_arch.png)
 
 ちなみに GKE 1.23 以前では Backup for GKE agent が GKE クラスタのワーカーノード上で動いているアーキテクチャとなっています。このアーキテクチャでは、ワーカーノードに自由にアクセス可能なユーザー/ワークロードが Backup for GKE エージェントを悪用できるという危険性があるため、セキュリティ面での懸念がある場合は GKE 1.24 以降で実装される新しいアーキテクチャ（利用者が触れないノード上でエージェントが動作する）を選択いただくことをお勧めします。
 
