@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Istio+Gateway API を試してみる"
 emoji: "👌"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: []
