@@ -54,7 +54,7 @@ https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/projects.locat
 開発環境でアルファクラスタを使ってもらう分にはいいけど、本番環境に間違ってデプロイしてほしくないというケースもあるかと思いますのでカスタム制約を作って防いでみます。
 
 **② 本番環境ではセキュアな構成の GKE クラスタを強制する**
-本番環境ではなるべくセキュアな構成のクラスタしか動かしたくないということもあると思います。今回は 1 例として以下のような構成のクラスタのみデプロイさせるような制約を設定してみます。
+本番環境ではなるべくセキュアな構成のクラスタしか動かしたくないということもあると思います。今回は一例として以下のような構成のクラスタのみデプロイさせるような制約を設定してみます。
 * [プライベートクラスタ](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters) ([Private Endpoint](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters#private_cp))
 * [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity)
 * [Shielded GKE Node](https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes)
@@ -89,7 +89,7 @@ description: All new GKE clusters must have Alpha Clusters disabled
 
 続いて、カスタム制約を作成をします。 `gcloud org-policies set-custom-constraint` コマンドにより、先ほど用意した yaml ファイルを使って組織内にカスタム制約を作成します。作成したカスタム制約は `gcloud org-policies list-custom-constraints` や Cloud Console 上から確認することができます。
 ```bash
-$ export ORGANIZATION_ID=<Organization ID>
+$ export ORGANIZATION_ID=<ORGANIZATION ID>
 $ gcloud org-policies set-custom-constraint constraint-disableAlphaClusters.yaml
 Created custom constraint [organizations/ORGANIZATION_ID/customConstraints/custom.disableAlphaClusters].
 $ gcloud org-policies list-custom-constraints --organization=$ORGANIZATION_ID
@@ -99,8 +99,7 @@ custom.disableAlphaClusters  DENY         CREATE        container.googleapis.com
 ![Cloud Console 上からの確認](/images/gke-orgpolicy/disableAlphaClusters.png)
 
 ### 2. カスタム制約の適用
-この制約は本番環境だけに適用したいので、作成したカスタム制約 `disableAlphaClusters` を `prod` フォルダに適用します。これにより、 `prod` フォルダ配下に作成されるプロジェクト全てに対して `disableAlphaClusters` が適用されるようになります。  
-せっかくなので Cloud Console 上から適用してみます。
+この制約は本番環境だけに適用したいので、作成したカスタム制約 `disableAlphaClusters` を `prod` フォルダに適用します。これにより、 `prod` フォルダ配下に作成されるプロジェクト全てに対して `disableAlphaClusters` が適用されるようになります。
 ![Cloud Console 上からの適用](/images/gke-orgpolicy/apply-disableAlphaClusters.png)
 
 ### 3. アルファクラスタを作成してみる
@@ -141,7 +140,7 @@ Created [https://container.googleapis.com/v1/projects/kuchima-adventcal2022-dev/
 無事クラスタが作成できました。これでフォルダを使った組織ポリシー適用の挙動が確認できました。アルファクラスタを無効にしたクラスタが `prod` 配下で作成できるかは、次のパターン`② 本番環境ではセキュアな構成の GKE クラスタを強制する`であわせて確認していきます。
 
 ## ② 本番環境ではセキュアな構成の GKE クラスタを強制する
-本番環境ではなるべくセキュアな構成のクラスタしか動かしたくないということで、1 例として以下の構成のクラスタのみデプロイさせるような制約を設定してみます。
+本番環境ではなるべくセキュアな構成のクラスタしか動かしたくないということで、一例として以下の構成のクラスタのみデプロイさせるような制約を設定してみます。
 * プライベートクラスタ (Private Endpoint)
 * Workload Identity
 * Shielded GKE Node
@@ -227,7 +226,7 @@ spec:
 
 `gcloud org-policies set-policy` コマンドで先ほどのポリシーファイルを指定し、ポリシーを適用します。ちゃんとポリシーが設定されたかどうかは `gcloud org-policies list` で確認可能です。
 ```bash
-$ export FOLDER_ID=<PROD_FOLDER_ID>
+$ export FOLDER_ID=<PROD FOLDER ID>
 $ gcloud org-policies set-policy policy-enablePrivateEndpoint.yaml
 Created policy [folders/PROD_FOLDER_ID/policies/custom.enablePrivateEndpoint].
 
