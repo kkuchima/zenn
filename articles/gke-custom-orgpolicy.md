@@ -14,10 +14,12 @@ published: false
 
 # 組織ポリシーとは
 [組織ポリシー](https://cloud.google.com/resource-manager/docs/organization-policy/overview)は Google Cloud の組織やフォルダ配下、特定プロジェクトに対して制約を設定することができる機能です。組織全体や特定フォルダに対してポリシーを設定すると、その配下のプロジェクトに自動的にポリシーが継承されるため、ガバナンスを効かせることができます。
+
 元々組織ポリシーは事前に定義された制約の中から自組織に合うものを選択し適用するものでしたが、本記事で紹介するカスタム制約の登場により**利用者側でも独自にポリシーを作成し柔軟な制約を設定**できるようになりました。  
+
 Google Cloud リソースに対する柔軟な制約は Terraform ([Conftest](https://github.com/open-policy-agent/conftest) 等の利用) や [Config Controller](https://cloud.google.com/anthos-config-management/docs/concepts/config-controller-overview) のレイヤーでかけることもできますが、組織ポリシーを使うことで **gcloud や Cloud Console で直接触られた場合など CI を通さない変更に対しても強制力を効かせる**ことができます。
 
-但し 2022.12 現在、カスタム制約は Preview ステータスであり、また [GKE と Dataproc しかサポートしていない](https://cloud.google.com/resource-manager/docs/organization-policy/custom-constraint-supported-services)のでご注意ください。
+ただし 2022.12 現在、カスタム制約は Preview ステータスであり、また [GKE と Dataproc しかサポートしていない](https://cloud.google.com/resource-manager/docs/organization-policy/custom-constraint-supported-services)のでご注意ください。
 
 # カスタム制約
 カスタム制約のフォーマットは以下のようになっています。
@@ -53,10 +55,10 @@ https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/projects.locat
 
 **② 本番環境ではセキュアな構成の GKE クラスタを強制する**
 本番環境ではなるべくセキュアな構成のクラスタしか動かしたくないということもあると思います。今回は 1 例として以下のような構成のクラスタのみデプロイさせるような制約を設定してみます。
-* プライベートクラスタ (Private Endpoint)
-* Workload Identity
-* Shielded GKE Node
-* COS Node Pool
+* [プライベートクラスタ](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters) ([Private Endpoint](https://cloud.google.com/kubernetes-engine/docs/how-to/private-clusters#private_cp))
+* [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity)
+* [Shielded GKE Node](https://cloud.google.com/kubernetes-engine/docs/how-to/shielded-gke-nodes)
+* [COS Node Pool](https://cloud.google.com/container-optimized-os/docs/concepts/security)
 
 本記事では上記の各オプション・機能の説明は割愛しますが、気になる方は以下のブログ記事も読んでみてください。
 https://medium.com/google-cloud-jp/gkesecurity-2022-1-ea4d55bcf4f7
@@ -64,8 +66,7 @@ https://medium.com/google-cloud-jp/gkesecurity-2022-1-ea4d55bcf4f7
 **③ 開発環境では Spot VM のみ許可する**
 (安全な構成という趣旨から逸れますが）コスト削減のために開発環境は [Spot VM](https://cloud.google.com/kubernetes-engine/docs/concepts/spot-vms) のみ利用を許可したいというケースもあるかもしれないので、そういうパターンも試してみます。
 
-ちなみに今回使ったサンプルマニフェストはこちらに置いています。あくまでデモ用に用意したものなので、もし試す場合は検証用の組織など本番ワークロードに影響がでない環境でお試しください。(サンプルの制約にツッコミどころなどあれば教えてください)
-https://github.com/kkuchima/custom-orgpolicy-sample
+これからご紹介する制約はあくまでデモ用に用意したものなので、もし試す場合は検証用の組織など本番ワークロードに影響がでない環境でお試しください。(あとツッコミどころなどあれば教えてください)
 
 ## ① 本番環境ではアルファクラスタのデプロイを禁止する
 まずは本番環境ではアルファクラスタが作成できないようにカスタム制約を設定していきます。
@@ -394,3 +395,4 @@ $ gcloud org-policies delete-custom-constraint custom.CONSTRAINT_NAME --organiza
 # 参考資料
 https://cloud.google.com/kubernetes-engine/docs/how-to/custom-org-policies
 https://cloud.google.com/resource-manager/docs/organization-policy/creating-managing-custom-constraints#common_expression_language
+https://github.com/kkuchima/custom-orgpolicy-sample
