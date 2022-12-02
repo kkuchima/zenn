@@ -13,7 +13,7 @@ published: false
 * カスタム制約を活用し、GKE のクラスタ構成に関する柔軟かつ強固な制約を組織全体や特定フォルダ配下のプロジェクトに適用することができます
 
 # 組織ポリシーとは
-[組織ポリシー](https://cloud.google.com/resource-manager/docs/organization-policy/overview)は Google Cloud の組織やフォルダ配下、特定プロジェクトに対して制約を設定することができる機能です。組織全体や特定フォルダに対してポリシーを設定すると、その配下のプロジェクトに自動的にポリシーが継承されるため、ガバナンスを効かせることができます。
+[組織ポリシー](https://cloud.google.com/resource-manager/docs/organization-policy/overview)は Google Cloud の組織やフォルダ配下、特定プロジェクトに対して制約を設定することができる機能です。組織全体や特定フォルダに対してポリシーを設定すると、その配下のプロジェクトに自動的にポリシーが継承されるため、ガバナンスを効かせることができます。この機能の利用に追加コストは発生しません ([無料です](https://cloud.google.com/kubernetes-engine/docs/how-to/custom-org-policies#pricing))。
 
 元々組織ポリシーは事前に定義された制約の中から自組織に合うものを選択し適用するものでしたが、本記事で紹介するカスタム制約の登場により**利用者側でも独自にポリシーを作成し柔軟な制約を設定**できるようになりました。  
 
@@ -37,11 +37,14 @@ description: DESCRIPTION
 ```
 * `name` でカスタム制約の名前を設定 (接頭辞を抜いて最大 100 文字) 
 * `resourceTypes` で制約をかける対象のリソースを指定 (`Cluster` や `NodePool`) 
-* `methodTypes` で制約をかける対象のメソッドを指定 (`CREATE` または `UPDATE`) 
+* `methodTypes` で制約をかける対象のメソッドを指定 (`CREATE` 単体もしくは `CREATE` と `UPDATE` を両方指定) 
 * `condition` で制約の条件を [CEL (Common Expression Language)](https://cloud.google.com/resource-manager/docs/organization-policy/creating-managing-custom-constraints#common_expression_language) で設定
 * `actionType` で制約が条件に合致した際のアクションを定義 (`ALLOW` または `DENY`) 
 
-GKE クラスタに対するカスタム制約は Google Kubernetes Engine API v1 の `Cluster` または `NodePool` リソースの任意フィールドに対する `CREATE` or `UPDATE` メソッドに対して設定することができます。各種 API の仕様については以下ドキュメントをご参照ください。
+`actionType` が `DENY` の場合は `condition` に**合致したもののみ拒否**しそれ以外は許可するという挙動になり、`ALLOW` の場合は `condition` に**合致したもののみ許可**しそれ以外は拒否する (Default Deny) 挙動となります。ちなみに `ALLOW` と `DENY` が競合した場合は `DENY` が優先されます。
+`ALLOW` と `DENY` どちらの制約を書くべきか、については `condition` の複雑さや強制したい制約の意図等をベースに設定するのが良いかと思います。
+
+GKE クラスタに対するカスタム制約は Google Kubernetes Engine API v1 の `Cluster` または `NodePool` リソースの任意フィールドに対する `CREATE` メソッドもしくは `CREATE` と `UPDATE` メソッド両方に対して設定することができます (`UPDATE` 単体に対する制約はサポートされていません)。各種 API の仕様については以下ドキュメントをご参照ください。
 https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1beta1/projects.locations.clusters
 https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/projects.locations.clusters.nodePools
 
@@ -72,8 +75,10 @@ https://medium.com/google-cloud-jp/gkesecurity-2022-1-ea4d55bcf4f7
 まずは本番環境ではアルファクラスタが作成できないようにカスタム制約を設定していきます。
 
 ### 1. カスタム制約の作成
-はじめに、設定したい内容の制約を書いていきます。Kubernetes Engine API の仕様を確認したところ今回防ぎたいアルファクラスタの設定は [Cluster](https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/projects.locations.clusters) リソース内で設定するようなので、`resourceTypes` は `container.googleapis.com/Cluster` を指定します。  
-アルファクラスタの新規作成を防ぎたいため、`methodTypes` には `CREATE` を指定しています。  
+はじめに、設定したい内容の制約を書いていきます。Kubernetes Engine API の仕様を確認したところ、今回防ぎたい`アルファクラスタの有効化`は [Cluster](https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/projects.locations.clusters) リソースの `enableKubernetesAlpha` フィールドの boolean により設定されるようです。なのでこのフィールドに対する制約を書いてみます。
+
+まず `resourceTypes` は `container.googleapis.com/Cluster` を指定します。  
+アルファクラスタの新規作成を防ぎたい (かつアルファクラスタのパラメータは immutable である) ため、`methodTypes` には `CREATE` を指定します。  
 制約の条件を設定する `condition` には `resource.enableKubernetesAlpha == true` を設定し、条件に合致すると拒否するように `actionType` を `DENY` に設定します。
 ```yaml:constraint-disableAlphaClusters.yaml
 name: organizations/ORGANIZATION_ID/customConstraints/custom.disableAlphaClusters
@@ -182,7 +187,8 @@ displayName: Enable Workload Identity on new clusters
 description: All new clusters must use Workload Identity.
 ```
 
-最後に COS Node のチェックです。Node の設定になるため、`NodePool` リソースの制約を設定します。具体的には `resource.config.imageType` が COS (containerd) かどうかを確認しています。
+最後に COS Node のチェックです。Node の設定になるため、[NodePool](https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/projects.locations.clusters.nodePools) リソースの制約を設定します。
+Node のイメージタイプは NodePool リソースの [NodeConfig](https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/NodeConfig)、具体的には `resource.config.imageType` フィールドで指定されます。COS (containerd) が利用されているかどうかはこちらを確認するのが良さそうです。
 ```yaml:constraint-requireCOSNode.yaml
 name: organizations/ORGANIZATION_ID/customConstraints/custom.requireCOSNode
 resourceTypes:
