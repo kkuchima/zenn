@@ -4,7 +4,7 @@ emoji: "🍣"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [GCP, GoogleCloud, GKE]
 publication_name: "google_cloud_jp"
-published: false
+published: true
 ---
 この記事は [Google Cloud Japan Advent Calendar 2022](https://zenn.dev/google_cloud_jp/articles/12bd83cd5b3370) の 2 日目の記事です。Preview で利用可能になった組織ポリシーの[カスタム制約](https://cloud.google.com/resource-manager/docs/organization-policy/creating-managing-custom-constraints)を使って、GKE クラスタに安全な設定を強制するよう構成してみます。
 
@@ -13,7 +13,7 @@ published: false
 * カスタム制約を活用し、GKE のクラスタ構成に関する柔軟かつ強固な制約を組織全体や特定フォルダ配下のプロジェクトに適用することができます
 
 # 組織ポリシーとは
-[組織ポリシー](https://cloud.google.com/resource-manager/docs/organization-policy/overview)は Google Cloud の組織やフォルダ配下、特定プロジェクトに対して制約を設定することができる機能です。組織全体や特定フォルダに対してポリシーを設定すると、その配下のプロジェクトに自動的にポリシーが継承されるため、ガバナンスを効かせることができます。この機能の利用に追加コストは発生しません ([無料です](https://cloud.google.com/kubernetes-engine/docs/how-to/custom-org-policies#pricing))。
+[組織ポリシー](https://cloud.google.com/resource-manager/docs/organization-policy/overview)は Google Cloud の組織やフォルダ配下、特定プロジェクトに対して制約を設定することができる機能です。組織全体や特定フォルダに対してポリシーを設定すると、その配下のプロジェクトに自動的にポリシーが継承されるため、ガバナンスを効かせることができます。本機能の利用にあたり追加コストは発生しません ([無料です](https://cloud.google.com/kubernetes-engine/docs/how-to/custom-org-policies#pricing))。
 
 元々組織ポリシーは事前に定義された制約の中から自組織に合うものを選択し適用するものでしたが、本記事で紹介するカスタム制約の登場により**利用者側でも独自にポリシーを作成し柔軟な制約を設定**できるようになりました。  
 
