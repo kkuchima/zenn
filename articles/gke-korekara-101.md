@@ -7,7 +7,7 @@ publication_name: "google_cloud_jp"
 published: true
 ---
 この記事は [Google Cloud Japan Advent Calendar 2022 (今から始める Google Cloud)](https://zenn.dev/google_cloud_jp/articles/12bd83cd5b3370#%E4%BB%8A%E3%81%8B%E3%82%89%E5%A7%8B%E3%82%81%E3%82%8B-google-cloud) の 6 日目(だったはず)の記事です。
-**今から始める Google Cloud** ということで、これから [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine) (以降 GKE) を使っていこうと考えられている方向けに GKE の基本的な特徴をご紹介しようと思います。(これから紹介する各機能・サービスの [Product launch stages](https://cloud.google.com/products#product-launch-stages) は記事執筆時点のものです)
+**今から始める Google Cloud** ということで、これから [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine) (以降 GKE) を使っていこうと考えられている方向けに GKE の基本的な特徴をご紹介しようと思います。(本記事で紹介する各機能・サービスの [Product launch stages](https://cloud.google.com/products#product-launch-stages) は記事執筆時点のものです)
 
 本記事では(文量が多くなってしまうため) Kubernetes 自体のベーシックな話は割愛し、既に「Kubernetes とは？」を理解されている方向けに GKE の良さをお伝えできればと思っています。
 ちなみにこの `これから始める GKE` はシリーズ化しようと思っていて、今後は設計に関する考慮ポイントなど細かめな話も書いていく予定です。
