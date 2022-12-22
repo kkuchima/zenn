@@ -8,6 +8,7 @@ published: false
 ---
 この記事は [Google Cloud Japan Advent Calendar 2022 (今から始める Google Cloud)](https://zenn.dev/google_cloud_jp/articles/12bd83cd5b3370#%E4%BB%8A%E3%81%8B%E3%82%89%E5%A7%8B%E3%82%81%E3%82%8B-google-cloud) の 6 日目(だったはず)の記事です。
 **今から始める Google Cloud** ということで、これから [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine) (以降 GKE) を使っていこうと考えられている方向けに GKE の基本的な特徴をご紹介しようと思います。(これから紹介する各機能・サービスの [Product launch stages](https://cloud.google.com/products#product-launch-stages) は記事執筆時点のものです)
+
 本記事では(文量が多くなってしまうため) Kubernetes 自体のベーシックな話は割愛し、既に「Kubernetes とは？」を理解されている方向けに GKE の良さをお伝えできればと思っています。
 ちなみにこの `これから始める GKE` はシリーズ化しようと思っていて、今後は設計に関する考慮ポイントなど細かめな話も書いていく予定です。
 
@@ -19,12 +20,11 @@ published: false
 GKE は Google Cloud が提供するフルマネージドな Kubernetes プラットフォームです。Kubernetes をより簡単かつ安全に使っていただくための機能を多く持っています。
 GKE のアーキテクチャとして、大きく [Control Plane](https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture#control_plane) と [Node](https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture#nodes) というコンポーネントに分かれています。
 そのうち Control Plane は Google が管理しており、利用者側で Control Plane の運用 (アップグレードやセキュリティ対策、スケール等) をしていただく必要はありません。
-一方 Node は **利用者側で管理する**もしくは **Google で管理する**という 2 つのモードから選ぶことができます。
-Node を利用者側で管理するのが **GKE Standard**、Node を Google で管理するのが **GKE Autopilot** というモードになります。
+一方 Node は 利用者側で管理する **GKE Standard** もしくは Google で管理する **GKE Autopilot** という 2 つのモードから選ぶことができます。
 ![GKE Standard vs Autopilot](/images/gke-korekara-101/gke-mode.png)
 
 GKE Standard と GKE Autopilot (以降 Autopilot) の違いについては本記事後半で説明します。
-一先ずざっくりと、通常 (従来) の GKE クラスタが GKE Standard で、より簡単に運用できるようマネージド度合いが上がったものが Autopilot と考えていただければ大丈夫です。
+一先ずざっくりと、従来の GKE クラスタが GKE Standard で、より簡単に運用できるようマネージド度合いが上がったものが Autopilot と考えていただければ大丈夫です。
 ではここから、GKE の特徴について簡単にご紹介していきます。
 
 ## 特徴① 運用負荷を軽減するための各種自動化機能
