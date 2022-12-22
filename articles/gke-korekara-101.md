@@ -12,14 +12,15 @@ published: false
 ちなみにこの `これから始める GKE` はシリーズ化しようと思っていて、今後は設計に関する考慮ポイントなど細かめな話も書いていく予定です。
 
 # tl;dr
-* GKE には **運用負荷を軽減するための各種自動化機能**や**高いスケーラビリティ・拡張性**が備わっています。また、**幅広い GKE の周辺サービス・エコシステム**を Google Cloud のマネージドサービスとして提供しています。
+* GKE には **運用負荷を軽減するための各種自動化機能**や**高い拡張性**が備わっています。また、**幅広い GKE の周辺サービス・エコシステム**を Google Cloud のマネージドサービスとして提供しています。
 * これから GKE / Kubernetes を始める方には GKE Autopilot からお試しいただくのがお勧めです。Google のベストプラクティスが組み込まれたクラスタを簡単に使い始めることができます。(Autopilot では要件があわない場合は GKE Standard も検討してみましょう)
 
 # GKE とは
 GKE は Google Cloud が提供するフルマネージドな Kubernetes プラットフォームです。Kubernetes をより簡単かつ安全に使っていただくための機能を多く持っています。
-GKE のアーキテクチャとして、大きく **Control Plane** と **Node** というコンポーネントに分かれています。
+GKE のアーキテクチャとして、大きく [Control Plane](https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture#control_plane) と [Node](https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-architecture#nodes) というコンポーネントに分かれています。
 そのうち Control Plane は Google が管理しており、利用者側で Control Plane の運用 (アップグレードやセキュリティ対策、スケール等) をしていただく必要はありません。
-一方 Node は 利用者側で管理するもしくは Google で管理するという以下 2 つのモードから選ぶことができます。
+一方 Node は **利用者側で管理する**もしくは **Google で管理する**という 2 つのモードから選ぶことができます。
+Node を利用者側で管理するのが **GKE Standard**、Node を Google で管理するのが **GKE Autopilot** というモードになります。
 ![GKE Standard vs Autopilot](/images/gke-korekara-101/gke-mode.png)
 
 GKE Standard と GKE Autopilot (以降 Autopilot) の違いについては本記事後半で説明します。
@@ -35,7 +36,7 @@ GKE Standard と GKE Autopilot (以降 Autopilot) の違いについては本記
 サービスの成長に比例してKubernetes クラスタの運用負荷は増加しますので、より効率的に運用し作業負荷を軽減するために各種自動化機能を活用することが求められます。
 本セクションでは、GKE が有する自動化機能の概要についてご紹介します。
 
-### 自動アップグレード
+### アップグレードの負荷軽減
 Kubernetes クラスタの運用の中でも特に負荷が高いのがアップグレード作業ではないでしょうか。
 Kubernetes / GKE では脆弱性の対応や既知問題の修正、新機能の導入のためにアップデートを頻繁にリリースしています。リリースサイクルの早さはセキュリティ対策や新機能利用の観点から有難い反面、運用を担当している方にとっては辛みにもなっている部分かと思います。
 GKE はこのアップグレードの運用負荷を低減するための機能を提供しているので、ここから簡単に紹介していきます。
@@ -55,20 +56,20 @@ GKE はこのアップグレードの運用負荷を低減するための機能�
 そこで GKE では自動アップグレードのタイミングをコントロールする仕組みも提供しています。
 [メンテナンスの時間枠](https://cloud.google.com/kubernetes-engine/docs/concepts/maintenance-windows-and-exclusions#maintenance_windows)という設定をしていただくことで、アップグレードなど自動メンテナンスを**許可**する時間枠を設定することができます。また[メンテナンスの除外](https://cloud.google.com/kubernetes-engine/docs/concepts/maintenance-windows-and-exclusions#exclusions)により、自動メンテナンスを**禁止**する期間を設定することもできます。
 * **メンテナンスの時間枠** ... 自動メンテナンスを許可する時間枠を設定。営業時間・ピーク時間帯を避けてアップグレードしてほしいケースやオンコール対応のしやすさなどから日中の業務時間帯にアップグレードをしてほしいケース等で利用
-* **メンテナンスの除外** ... 自動メンテナンスを許可する時間枠を設定。大型イベント期間中や人手が足りない時期などアップグレードをしてほしくない期間を設定するケース等で利用。マイナーバージョンのアップグレード (例：1.22 -> 1.23) を最大 180 日間[^1]停止することも可能
+* **メンテナンスの除外** ... 自動メンテナンスを禁止する時間枠を設定。大型イベント期間中や人手が足りない時期などアップグレードをしてほしくない期間を設定するケース等で利用。マイナーバージョンのアップグレード (例：1.22 -> 1.23) を最大 180 日間[^1]停止することも可能
 
 これらの機能を活用することにより、自動アップグレードによる思わぬサービス影響を抑えたり、人員の不足やイベントの期間中等を避けより安全なタイミングでアップグレードができるよう制御することが可能になります。
 
 [^1]: リリースチャンネルに登録されているクラスタが対象。また、マイナーバージョンの EOL を超過することはできません。
 
 #### アップグレードに影響のある構成 / API 利用の検知
-また、GKE には今後のマイナー バージョンでサポートされない構成や Kubernetes API がクラスタで利用されていることを自動的に検出し通知する [Deprecation Insights](https://cloud.google.com/kubernetes-engine/docs/deprecations/viewing-deprecation-insights-and-recommendations) という機能も提供しています (Preview)。
-2022.12 現在 Deprecation Insights では以下 3 種類の Deprication を検出することが可能です。
+また、GKE には今後のマイナー バージョンでサポートされない構成や Kubernetes API がクラスタで利用されていることを自動的に検出し通知する [Deprecation Insights](https://cloud.google.com/kubernetes-engine/docs/deprecations/viewing-deprecation-insights-and-recommendations) という機能も提供しています ([Preview](https://cloud.google.com/products#product-launch-stages))。
+2022.12 現在 Deprecation Insights では以下 3 種類の Deprecation を検出することが可能です。
 * [1.22 で削除予定の Kubernetes API の利用](https://cloud.google.com/kubernetes-engine/docs/deprecations/apis-1-22)
 * [1.23 でサポートされなくなる SAN の無い X.509 証明書の利用](https://cloud.google.com/kubernetes-engine/docs/deprecations/webhookcompatibility)
 * [1.24 でサポートされなくなる Docker ベースのノードイメージの利用](https://cloud.google.com/kubernetes-engine/docs/deprecations/docker-containerd)
 
-この機能により、上記 Remove される API の利用や次バージョンでサポートされない構成が検知されるとマイナーバージョンの自動アップグレードが一時停止される挙動となるため、知らないうちにクラスタがアップグレードされて手元のマニフェストと互換性がなくなっていた。。的なトラブルの発生を防ぐことが期待できます。(但し、各[マイナーバージョンの EOL](https://cloud.google.com/kubernetes-engine/versioning#lifecycle) を過ぎた場合は強制的にアップグレードされてしまうので注意)
+この機能により、削除予定の API の利用や次バージョンでサポートされない構成が検知されるとマイナーバージョンの自動アップグレードが一時停止される挙動となるため、知らないうちにクラスタがアップグレードされて手元のマニフェストと互換性がなくなっていた。。的なトラブルの発生を防ぐことが期待できます。(但し、各[マイナーバージョンの EOL](https://cloud.google.com/kubernetes-engine/versioning#lifecycle) を過ぎた場合は強制的にアップグレードされてしまうので注意)
 
 #### Node 手動アップグレードのオプション
 自動アップグレードの話とは若干ずれますが、前述の通り Node のアップグレードタイミングを自分でコントロールしたいという場合は手動アップグレードを選択することも可能です。
@@ -113,8 +114,8 @@ GKE では Node が Unhealthy な状態になっていることを検知し、�
 この機能はデフォルト有効です(Autopilot やリリースチャンネルに登録されているクラスタでは無効化できません)。
 利用者側で Node 自体の健全性の確認やその復旧作業を実施する負荷が軽減できるため、特に理由がなければそのまま有効にしておくべき機能だと思います。
 
-## 特徴② 高いスケーラビリティ・拡張性
-2 つ目の GKE の特徴として、高いスケーラビリティ・拡張性を持っているというのが挙げられます。
+## 特徴② 高い拡張性
+2 つ目の GKE の特徴として、高い拡張性を持っているというのが挙げられます。
 例えば GKE Standard のクラスタあたりの最大ノード数は [15,000](https://cloud.google.com/kubernetes-engine/quotas#limits_per_cluster) です。(とはいえここまで大きなクラスタを実際に作るのはあまりお勧めしないので、数百数千 Node 以上の規模になる場合は一度 Google Cloud のカスタマーエンジニアにアーキテクチャやキャパシティのご相談いただくのが良いかと思います)
 GKE は単純な Node 数上限の高さだけではなく、より大規模なワークロードの実行に適した構成オプションやリソース拡張のしやすい仕組みを提供しています。
 
@@ -132,7 +133,7 @@ GKE では[Pod の IP アドレスレンジを後から追加](https://cloud.goo
 ![Cloud DNS for GKE](/images/gke-korekara-101/clouddns-gke.png)
 
 また、[NodeLocal DNSCache](https://cloud.google.com/kubernetes-engine/docs/how-to/nodelocal-dns-cache) というアドオンを有効化することで各 Node 上で DNS キャッシュを提供することができます。ちなみに NodeLocal DNSCache は先ほど紹介した Cloud DNS for GKE と併用することも可能です。
-この機能により Pod から送られる名前解決のリクエストを、まずその Pod が動いている Node 上のキャッシュで解決しようとするため、クラスタ内の kube-dns や Cloud DNS に対するクエリ発行を抑えることにより DNS 側(特に kube-dns)の負荷の低減やレイテンシーを小さくすることが期待できます。
+この機能により Pod から送られる名前解決のリクエストを、まずその Pod が動いている Node 上のキャッシュで解決しようとするため、クラスタ内の kube-dns や Cloud DNS に対するクエリ発行が抑えられ DNS 側(特に kube-dns)の負荷の低減やレイテンシーを小さくすることが期待できます。
 ![NodeLocal DNSCache](/images/gke-korekara-101/dns-cache.png)
 
 ### マルチクラスタ間での負荷分散
@@ -158,12 +159,12 @@ GKE の特筆すべき特徴の最後として、多くの周辺サービス、�
 
 Kubernetes 運用の大変なところの 1 つとして、K8s エコシステムの運用があると思うのですが、上記のようなマネージドサービスを活用することによって、K8s エコシステムのアップグレードやセキュリティ対応、可用性の担保、リソース管理などいわゆる Day2 Operation の負荷を軽減することが期待できます。
 
-その他セキュリティの観点でも [Binary Authorization](https://cloud.google.com/binary-authorization/docs/overview) という信頼できるコンテナイメージのみデプロイを許可するサービスや Security Command Center の [Container Threat Detection](https://cloud.google.com/security-command-center/docs/concepts-container-threat-detection-overview) という実行中のコンテナに対する振る舞い検知機能を提供するサービスなど、多くのサービスが存在します。
+その他セキュリティの観点でも [Binary Authorization](https://cloud.google.com/binary-authorization/docs/overview) という信頼できるコンテナイメージのみデプロイを許可するサービスや [Security Command Center](https://cloud.google.com/security-command-center) の [Container Threat Detection](https://cloud.google.com/security-command-center/docs/concepts-container-threat-detection-overview) という実行中のコンテナに対する振る舞い検知機能を提供するサービスなど、多くのサービスが存在します。
 以下、セキュリティ関連サービスの例です：
 * [Container Analysis](https://cloud.google.com/container-analysis/docs)... コンテナイメージの脆弱性をスキャンしてくれるサービス。Artifact Registry や Container Registry といった Google Cloud マネージドのコンテナレジストリ上に Push されたイメージを自動的にスキャンしたり、オンデマンドでコンテナレジストリやローカルにあるイメージをスキャンすることができる
 * [Binary Authorization](https://cloud.google.com/binary-authorization/docs/overview)... 信頼できるコンテナイメージのみが GKE クラスタにデプロイされることを保証してくれるサービス。「信頼できないリポジトリが提供しているベースイメージやコンテナイメージにマルウェアや脆弱性が含まれている」リスクや「CI / CD をバイパスした有害なコンテナイメージがデプロイされる」リスクを低減することができる
 * [Container Threat Detection](https://cloud.google.com/security-command-center/docs/concepts-container-threat-detection-overview)... 実行中のコンテナに対する振る舞い検知機能を提供するサービス。元のコンテナ イメージに存在しなかったバイナリ (マルウェアやクリプトマイナー等) の実行やリバースシェル実行 (ボットネット) のような異常な挙動・攻撃を検出することができる
-* [GKE Security Posture](https://cloud.google.com/kubernetes-engine/docs/concepts/about-security-posture-dashboard)... GKE 上で動くワークロードの K8s マニフェストやコンテナイメージの脆弱性を継続的にチェックしてくれるサービスです。例えばワークロードの構成スキャンを有効化すると、特権コンテナの利用や `runAsNonRoot` が設定されていないワークロード等 Kuberenetes の [Pod Security Standards](https://kubernetes.io/docs/concepts/security/pod-security-standards/) に沿っていないワークロードを検出し知らせてくれる
+* [GKE Security Posture](https://cloud.google.com/kubernetes-engine/docs/concepts/about-security-posture-dashboard)... GKE 上で動くワークロードの K8s マニフェストやコンテナイメージの脆弱性を継続的にチェックしてくれるサービス。例えばワークロードの構成スキャンを有効化すると、特権コンテナの利用や `runAsNonRoot` が設定されていないワークロード等 Kuberenetes の [Pod Security Standards](https://kubernetes.io/docs/concepts/security/pod-security-standards/) に沿っていないワークロードを検出し知らせてくれる
 
 GKE のセキュリティ機能やセキュリティ関連サービスについては以下の記事でまとめていますので、ご興味あれば見てみてください。
 https://medium.com/google-cloud-jp/gkesecurity-2022-1-ea4d55bcf4f7
@@ -180,19 +181,19 @@ Autopilot の仕様の詳細については[公式ドキュメント](https://cl
 
 まず GKE Standard は従来通りの GKE クラスタであり、Control Plane は Google 管理ですが Node はユーザー管理となっています。
 一方 GKE Autopilot は Control Plane だけでなく Node も Google 管理になっています。`Google 管理`が具体的に何を指しているかというと
-* Node のサイズや台数調整などリソースの管理が不要です (CA および NAP による Node の自動スケールで実現)
-* Node のアップグレード作業が不要です (リリースチャンネルによる自動的なバージョン管理)
-* Unhealthy な Node を自動的に修復します (Node Auto Repair による自動修復)
-* Node は利用者から見えません (`kubectl get nodes` 等で確認することはできる)
+* Node のサイズや台数調整などリソースの管理が不要 (CA および NAP による Node の自動スケールで実現)
+* Node のアップグレード作業が不要 (リリースチャンネルによる自動的なバージョン管理)
+* Unhealthy な Node を自動的に修復 (Node Auto Repair による自動修復)
+* Node は利用者から見えない (`kubectl get nodes` 等で確認することはできる)
 
 上記の通り、GKE Autopilot は Node が隠蔽されてはいるものの、実態としてはこれまでご紹介してきた GKE の各種自動化機能を使って構成されており、何かしら特殊なことをしているわけではありません。
-なので、例えば DaemonSet もデプロイができますし、Istio (のマネージドサービスである ASM) を使ったり GPU の利用もサポートされています。
+なので、例えば DaemonSet もデプロイができますし、Istio (のマネージドサービスである ASM) を使ったり [GPU の利用](https://cloud.google.com/kubernetes-engine/docs/how-to/autopilot-gpus)(Preview)もサポートされています。
 
 ただ、Node が Google 管理であるということで [Node のシステム構成をカスタマイズ](https://cloud.google.com/kubernetes-engine/docs/how-to/node-system-config)するなど、細かなチューニングをすることはできません。sysctl や kubelet のパラメーターチューニングが必要なワークロードの場合は GKE Standard をご利用いただくのが良いかと思います。
 
 次にセキュリティの観点ですが、 GKE Autopilot は各種セキュリティのベストプラクティスが組み込みで実装されており、Production Ready なクラスタをすぐに利用することができます。
 * Workload Identity 有効化 (無効化不可)
-* Shieleded GKE Node / セキュアブート有効化 (無効化不可)
+* Shielded GKE Node / セキュアブート有効化 (無効化不可)
 * Container-Optimized OS (COS) containerd イメージのみ利用可能
 * Node への SSH 不可
 * 特権コンテナのデプロイ不可
@@ -209,7 +210,7 @@ Autopilot の仕様の詳細については[公式ドキュメント](https://cl
 
 ということでまとめると、**各種自動化機能が有効化されていてより簡単に運用できる Kubernetes クラスタが欲しい**場合や**セキュアな構成のクラスタを簡単に利用したい**場合は Autopilot を選択いただくのが良いかと思います。
 一方、要件的に **Node レベルのチューニングが必要なワークロード**や、**Autopilot 特有の制限が許容できないワークロード**をデプロイしたい場合などは GKE Standard を選んでいただく必要があります。急激に Pod の増減が発生するようなバースト性のあるワークロードも(ワークアラウンドはあるものの) Autopilot には向いていないことが多いので、負荷試験などをした上で GKE Standard or Autopilot をお試しいただくのが良いと思います。
-個人的にはまずは Autopilot 前提で検討してみて、要件的に合わなければ GKE Standard という選択の仕方もアリだと思います。
+個人的にはまずは Autopilot 前提で検討してみて、要件的に合わなければ GKE Standard という選択の仕方もアリだと思います。(ちなみに現在、Cloud Console 上から GKE クラスタを作成する際のデフォルトは Autopilot になっています)
 
 # まとめ
 GKE の良さは色々とあるものの、今回は 3 つのポイントに絞ってご紹介させていただきました。
