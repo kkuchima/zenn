@@ -4,7 +4,7 @@ emoji: "🦄"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [GCP, GoogleCloud, GKE]
 publication_name: "google_cloud_jp"
-published: false
+published: true
 ---
 この記事は [Google Cloud Japan Advent Calendar 2022 (今から始める Google Cloud)](https://zenn.dev/google_cloud_jp/articles/12bd83cd5b3370#%E4%BB%8A%E3%81%8B%E3%82%89%E5%A7%8B%E3%82%81%E3%82%8B-google-cloud) の 6 日目(だったはず)の記事です。
 **今から始める Google Cloud** ということで、これから [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine) (以降 GKE) を使っていこうと考えられている方向けに GKE の基本的な特徴をご紹介しようと思います。(これから紹介する各機能・サービスの [Product launch stages](https://cloud.google.com/products#product-launch-stages) は記事執筆時点のものです)
@@ -217,7 +217,7 @@ Autopilot の仕様の詳細については[公式ドキュメント](https://cl
 # まとめ
 GKE の良さは色々とあるものの、今回は 3 つのポイントに絞ってご紹介させていただきました。
 * **特徴① 運用負荷を軽減するための各種自動化機能**... 自動アップグレード機能や、自動スケール機能など Kubernetes クラスタの運用をより簡単にするための機能が備わっている
-* **特徴② 高い拡張性**... クラスタ内 DNS の代わりにマネージドサービスを活用するオプションの提供や、リソース追加に伴う IP アドレス枯渇に対処可能なオプションの提供等、スケーラビリティや拡張性の高さ
+* **特徴② 高い拡張性**... クラスタ内 DNS の代わりにマネージドサービスを活用するオプションの提供や、リソース追加に伴う IP アドレス枯渇に対処可能なオプションの提供等、拡張性の高さ
 * **特徴③ 幅広い周辺サービス・エコシステム**... Prometheus や Istio 等 K8s エコシステムのマネージドサービスを提供、またコンテナセキュリティ関連のサービスを多数提供
 
 また、これから GKE / Kubernetes を始める方には GKE Autopilot から試していただくのがお勧めです。Google のベストプラクティスが組み込まれたクラスタを簡単に使い始めることができます。(要件があわなければ GKE Standard も検討してみましょう)
