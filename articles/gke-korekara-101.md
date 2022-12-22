@@ -96,7 +96,7 @@ Kubernetes ではこのような課題を解決するための自動スケール
 
 #### Multidimensional Pod Autoscaler (MPA) 
 MPA は [Horizontal Pod Autoscaler (HPA)](https://cloud.google.com/kubernetes-engine/docs/concepts/horizontalpodautoscaler) というワークロードの CPU やメモリの消費量等に応じて自動的に Pod 数を水平方向にスケールさせる機能と [Vertical Pod Autoscaler (VPA)](https://cloud.google.com/kubernetes-engine/docs/concepts/verticalpodautoscaler) という実行中のワークロードを分析し、CPU やメモリの requests / limits 値の推奨値算出やリソース値を自動更新し垂直スケールさせる機能を**併用**したオートスケール機能です (Preview)。
-本来、CPU やメモリの値をターゲットにした HPA と VPA を合わせて使うことは非推奨となっていますが、MPA を利用することでこの 2 つを安全に併用することができます。
+本来、[CPU やメモリの値をターゲットにした HPA と VPA を合わせて使うことは非推奨](https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler#known-limitations)となっていますが、MPA を利用することでこの 2 つを安全に併用することができます。
 MPA 自体は CPU ベースの HPA とメモリベースの VPA を組み合わせたオートスケールを 1 つのオブジェクト (MultidimPodAutoscaler) で制御しています。
 ユースケースとしては **CPU の利用率ベースで Pod 数を調整しつつ OOM が発生しないよう VPA によるメモリの垂直スケールも併せて行いたい**ようなケースでの利用が想定されます。
 
