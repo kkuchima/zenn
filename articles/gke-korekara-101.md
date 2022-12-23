@@ -157,14 +157,14 @@ GKE の特筆すべき特徴の最後として、多くの周辺サービス、�
 * OPA Gatekeeper のマネージドサービスである [Policy Controller](https://cloud.google.com/anthos-config-management/docs/concepts/policy-controller)
 * Knative のマネージドサービスである [Cloud Run for Anthos](https://cloud.google.com/anthos/run/docs/deploy-application)
 
-Kubernetes 運用の大変なところの 1 つとして、K8s エコシステムの運用があると思うのですが、上記のようなマネージドサービスを活用することによって、K8s エコシステムのアップグレードやセキュリティ対応、可用性の担保、リソース管理などいわゆる Day2 Operation の負荷を軽減することが期待できます。
+Kubernetes 運用の大変なところの 1 つとして、エコシステムの運用があると思うのですが、上記のようなマネージドサービスを活用することによって、Kubernetes エコシステムのアップグレードやセキュリティ対応、可用性の担保、リソース管理などいわゆる Day2 Operation の負荷を軽減することが期待できます。
 
 その他セキュリティの観点でも [Binary Authorization](https://cloud.google.com/binary-authorization/docs/overview) という信頼できるコンテナイメージのみデプロイを許可するサービスや [Security Command Center](https://cloud.google.com/security-command-center) の [Container Threat Detection](https://cloud.google.com/security-command-center/docs/concepts-container-threat-detection-overview) という実行中のコンテナに対する振る舞い検知機能を提供するサービスなど、多くのサービスが存在します。
 以下、セキュリティ関連サービスの例です：
 * [Container Analysis](https://cloud.google.com/container-analysis/docs)... コンテナイメージの脆弱性をスキャンしてくれるサービス。Artifact Registry や Container Registry といった Google Cloud マネージドのコンテナレジストリ上に Push されたイメージを自動的にスキャンしたり、オンデマンドでコンテナレジストリやローカルにあるイメージをスキャンすることができる
 * [Binary Authorization](https://cloud.google.com/binary-authorization/docs/overview)... 信頼できるコンテナイメージのみが GKE クラスタにデプロイされることを保証してくれるサービス。「信頼できないリポジトリが提供しているベースイメージやコンテナイメージにマルウェアや脆弱性が含まれている」リスクや「CI / CD をバイパスした有害なコンテナイメージがデプロイされる」リスクを低減することができる
 * [Container Threat Detection](https://cloud.google.com/security-command-center/docs/concepts-container-threat-detection-overview)... 実行中のコンテナに対する振る舞い検知機能を提供するサービス。元のコンテナ イメージに存在しなかったバイナリ (マルウェアやクリプトマイナー等) の実行やリバースシェル実行 (ボットネット) のような異常な挙動・攻撃を検出することができる
-* [GKE Security Posture](https://cloud.google.com/kubernetes-engine/docs/concepts/about-security-posture-dashboard)... GKE 上で動くワークロードの K8s マニフェストやコンテナイメージの脆弱性を継続的にチェックしてくれるサービス。例えばワークロードの構成スキャンを有効化すると、特権コンテナの利用や `runAsNonRoot` が設定されていないワークロード等 Kuberenetes の [Pod Security Standards](https://kubernetes.io/docs/concepts/security/pod-security-standards/) に沿っていないワークロードを検出し知らせてくれる
+* [GKE Security Posture](https://cloud.google.com/kubernetes-engine/docs/concepts/about-security-posture-dashboard)... GKE 上で動くワークロードの Kubernetes マニフェストやコンテナイメージの脆弱性を継続的にチェックしてくれるサービス。例えばワークロードの構成スキャンを有効化すると、特権コンテナの利用や `runAsNonRoot` が設定されていないワークロード等 Kubernetes の [Pod Security Standards](https://kubernetes.io/docs/concepts/security/pod-security-standards/) に沿っていないワークロードを検出し知らせてくれる
 
 GKE のセキュリティ機能やセキュリティ関連サービスについては以下の記事でまとめていますので、ご興味あれば見てみてください。
 https://medium.com/google-cloud-jp/gkesecurity-2022-1-ea4d55bcf4f7
@@ -206,11 +206,11 @@ Autopilot の仕様の詳細については[公式ドキュメント](https://cl
 そのようなワークロードの場合は GKE Standard を利用し、あらかじめスケールに耐えうる分の Node をプロビジョニングしておくなどの方法を取るのも良いではないかと思います。(もしくはワークアラウンドとして GKE Autopilot でも[予め Priority の低い Pod をデプロイしておき余剰リソースを確保する](https://wdenniss.com/gke-autopilot-spare-capacity)という方法を取ることもできます)
 
 最後に、課金についてですが GKE Standard は Node リソースに対して課金が発生しますが、Autopilot は Node リソースに対する課金はされず [Pod 単位の課金](https://cloud.google.com/kubernetes-engine/pricing#autopilot_mode)となります。Pod 単位といってもシステム系 Pod のリソースは課金の対象外で、利用者でデプロイしたアプリケーションの Pod に対して課金されます。
-料金体系も含め、Autopilot は**アプリケーション開発に集中できる** K8s クラスタであることがお分かりいただけるのではないかと思います。
+料金体系も含め、Autopilot は**アプリケーション開発に集中できる** Kubernetes クラスタであることがお分かりいただけるのではないかと思います。
 
 ということでまとめると、**各種自動化機能が有効化されていてより簡単に運用できる Kubernetes クラスタが欲しい**場合や**セキュアな構成のクラスタを簡単に利用したい**場合は Autopilot を選択いただくのが良いかと思います。
 一方、要件的に **Node レベルのチューニングが必要なワークロード**や、**Autopilot 特有の制限が許容できないワークロード**をデプロイしたい場合などは GKE Standard を選んでいただく必要があります。
-急激に Pod の増減が発生するようなバースト性のあるワークロードも(ワークアラウンドはあるものの) Autopilot には向いていないことが多いので、負荷試験などをした上で GKE Standard or Autopilot をお試しいただくのが良いと思います。
+急激に Pod の増減が発生するようなバースト性のあるワークロードも(ワークアラウンドはあるものの) Autopilot には向いていないことが多いので、負荷試験などをした上で GKE Standard or Autopilot を選択いただくのが良いと思います。
 
 個人的にはまずは Autopilot 前提で検討してみて、要件的に合わなければ GKE Standard という選択の仕方もアリだと思います。(ちなみに現在、Cloud Console 上から GKE クラスタを作成する際のデフォルトは Autopilot になっています)
 
@@ -218,7 +218,7 @@ Autopilot の仕様の詳細については[公式ドキュメント](https://cl
 GKE の良さは色々とあるものの、今回は 3 つのポイントに絞ってご紹介させていただきました。
 * **特徴① 運用負荷を軽減するための各種自動化機能**... 自動アップグレード機能や、自動スケール機能など Kubernetes クラスタの運用をより簡単にするための機能が備わっている
 * **特徴② 高い拡張性**... クラスタ内 DNS の代わりにマネージドサービスを活用するオプションの提供や、リソース追加に伴う IP アドレス枯渇に対処可能なオプションの提供等、拡張性の高さ
-* **特徴③ 幅広い周辺サービス・エコシステム**... Prometheus や Istio 等 K8s エコシステムのマネージドサービスを提供、またコンテナセキュリティ関連のサービスを多数提供
+* **特徴③ 幅広い周辺サービス・エコシステム**... Prometheus や Istio 等 Kubernetes エコシステムのマネージドサービスを提供、またコンテナセキュリティ関連のサービスを多数提供
 
 また、これから GKE / Kubernetes を始める方には GKE Autopilot から試していただくのがお勧めです。Google のベストプラクティスが組み込まれたクラスタを簡単に使い始めることができます。(要件があわなければ GKE Standard も検討してみましょう)
 
