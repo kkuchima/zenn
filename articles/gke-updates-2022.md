@@ -6,7 +6,7 @@ topics: [GCP, GoogleCloud, GKE]
 publication_name: "google_cloud_jp"
 published: false
 ---
-この記事は [GCP(Google Cloud Platform) Advent Calendar 2022](https://qiita.com/advent-calendar/2022/gcp) の 23 日目(だったはず)の記事です。
+公開がかなり遅くなってしまいましたが、昨年 2022 年の GKE アップデートを振り返ってみたいと思います。
 2022 年も GKE には多くのアップデートがありました。多すぎて全部のアップデートを書くと読むのも大変だと思うので、本記事では今年のアップデートの中でも個人的に注目度の高いものをピックアップして紹介していこうと思います。とはいえ結構あります。
 
 * ノード
@@ -130,19 +130,21 @@ GKE 1.24.1-gke.800 以降で、Cluster Autoscaler の分散ポリシーを変更
 
 
 ## GKE Arm Nodes (Preview)
-GKE で ARM ベースの Node (Tau T2A) をサポート
-GKE Standard / Autopilot で利用可能
-現時点では日本リージョンでの利用不可
-その他、以下の OS や機能をサポートしていない：
-Ubuntu / Windows OS 
-Local SSD
-GPU
-Image Streaming
-GMP、など
+GKE version 1.24 以降で Arm ベースの Node ([Tau T2A](https://cloud.google.com/compute/docs/general-purpose-machines#t2a_machines)) がサポートされました。
+GKE Autopilot では `Scale-Out` Compute Class を指定することで Arm ベースの Node が利用できます。
+1 クラスタ内に x86 ベースの Node と Arm ベースの Node を共存させることも可能です。その際、ワークロードは NodeSelector や toleration を使ってデプロイ先の Node を選択するよう構成します。
+ただし 2023.01 現時点では日本リージョン (asia-northeast1/2) での利用不可です。また以下の機能をサポートしていません。
+* Container Threat Detection
+* Confidential GKE Node
+* ローカル SSD
+* GPU
+* Windows Node
+* Google Managed Service for Prometheus
+* Filestore CSI ドライバ
 https://cloud.google.com/kubernetes-engine/docs/concepts/arm-on-gke
 
-
-## Confidential GKE Nodes (GA)
+## Confidential GKE Nodes (GA) Standard
+[Confidential GKE Nodes](https://cloud.google.com/kubernetes-engine/docs/how-to/confidential-gke-nodes) という [Confidential VM](https://cloud.google.com/compute/confidential-vm/docs/about-cvm) を GKE Node として利用できるオプションが GA になりました。本機能を有効化することにより、GKE Node 上で処理中のデータも暗号化することが可能となります。
 
 Confidential VM Service を有効化することにより、GKE Node 上で処理中のデータを暗号化することが可能となる
 
