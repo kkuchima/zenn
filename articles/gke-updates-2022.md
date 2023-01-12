@@ -130,7 +130,7 @@ GKE 1.24.1-gke.800 以降で、Cluster Autoscaler の分散ポリシーを変更
 
 
 ## GKE Arm Nodes (Preview)
-GKE version 1.24 以降で Arm ベースの Node ([Tau T2A](https://cloud.google.com/compute/docs/general-purpose-machines#t2a_machines)) がサポートされました。
+GKE Standard / Autopilot 1.24 以降で Arm ベースの Node ([Tau T2A](https://cloud.google.com/compute/docs/general-purpose-machines#t2a_machines)) がサポートされました。
 GKE Autopilot では `Scale-Out` Compute Class を指定することで Arm ベースの Node が利用できます。
 1 クラスタ内に x86 ベースの Node と Arm ベースの Node を共存させることも可能です。その際、ワークロードは NodeSelector や toleration を使ってデプロイ先の Node を選択するよう構成します。
 ただし 2023.01 現時点では日本リージョン (asia-northeast1/2) での利用不可です。また以下の機能をサポートしていません。
@@ -143,28 +143,30 @@ GKE Autopilot では `Scale-Out` Compute Class を指定することで Arm ベ�
 * Filestore CSI ドライバ
 https://cloud.google.com/kubernetes-engine/docs/concepts/arm-on-gke
 
-## Confidential GKE Nodes (GA) Standard
-[Confidential GKE Nodes](https://cloud.google.com/kubernetes-engine/docs/how-to/confidential-gke-nodes) という [Confidential VM](https://cloud.google.com/compute/confidential-vm/docs/about-cvm) を GKE Node として利用できるオプションが GA になりました。本機能を有効化することにより、GKE Node 上で処理中のデータも暗号化することが可能となります。
+## Confidential GKE Nodes (GA)
+GKE Standard で [Confidential GKE Nodes](https://cloud.google.com/kubernetes-engine/docs/how-to/confidential-gke-nodes) という [Confidential VM](https://cloud.google.com/compute/confidential-vm/docs/about-cvm) を GKE Node として利用できるオプションが GA になりました。本機能を有効化することにより、GKE Node 上で処理中のデータも暗号化することが可能となります。
 
-Confidential VM Service を有効化することにより、GKE Node 上で処理中のデータを暗号化することが可能となる
+ただし利用にあたり[制約事項](https://cloud.google.com/kubernetes-engine/docs/how-to/confidential-gke-nodes#limitations)があります。以下、制約事項の例です。利用する場合は事前にこの制限を許容できるかご確認ください。
+* ライブマイグレーションがサポートされていないため、ホストメンテナンスが発生するとワークロードが中断される可能性がある
+* 永続ディスクベースの Persistent Volume のみサポート (GKE 1.22 以降)
+* GPU 非サポート
+* Node OS として Container-Optimized OS (COS) のみサポート
 
-実行中のコードの変更なく、メモリ内や中央処理装置（CPU）外のどの場所でも、データが暗号化された状態が保持されるよう構成することができる
+## 時間共有 GPU (GA)
+GKE Standard で 時間共有 GPU が GA になりました。
+本機能を有効にすることで Node 上の単一の物理 GPU を複数のコンテナで共有可能になり、高いコスト効率を実現することができるようになります。
+時間共有 GPU を使用するワークロードは nodeSelector 等で以下 Label を指定するよりデプロイすることができます。物理 GPU の共有を許可するコンテナの最大数を指定することができます。
+```yaml
+cloud.google.com/gke-max-shared-clients-per-gpu: "3"
+cloud.google.com/gke-gpu-sharing-strategy: time-sharing
+```
 
-2022.06 時点での主な制約：
-Container-Optimized OS のみサポート
-GPU 非サポート
-PD ベースの Persistent Volume のみサポート (GKE 1.22 以降)
-
-
-## GPU タイムシェア (GA)
-ノード上の単一の物理 GPU を複数のコンテナで共有可能に
-GPU をコンテナ間でシェアすることにより高いコスト効率を実現
 GKE クラスタやノードプール単位で有効化・無効化可能
 
 GPU タイムシェアが有効化されたノードのラベルを指定することで、ワークロードをデプロ
-Autopilot では利用できない
-マルチインスタンスとの違い
 
+マルチインスタンスとの違い
+複数インスタンス GPU と時間共有 GPU の併用も可能
 
 
 
