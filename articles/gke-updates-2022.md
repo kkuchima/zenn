@@ -60,8 +60,8 @@ GKE Autopilot 1.24.1-gke.1400 以降で `Balanced` と　`Scale-Out` のコン�
                 memory: "2Gi"
 ```
 上記のマニフェストが適用されることにより、`Scale-Out` class の Node 自動的にプロビジョニングされ、その Node 上でワークロードが稼働するようになります。
-arm64 など特定の CPU アーキテクチャを指定したい場合は、`kubernetes.io/arch:arm64` のように、条件を追加することで実現できます。　
-コンピューティングクラス毎に単価が違います。利用にあたっては事前に[料金体系](https://cloud.google.com/kubernetes-engine/pricing)もご確認ください。
+arm64 など特定の CPU アーキテクチャを指定したい場合は、`kubernetes.io/arch:arm64` のように、条件を追加することで実現できます。
+価格の観点ですが、コンピューティングクラス毎に Pod 単価が異なりますので利用にあたっては事前に[料金体系](https://cloud.google.com/kubernetes-engine/pricing)もご確認ください。
 
 
 ## GKE Autopilot GPU サポート (Preview)
@@ -87,12 +87,47 @@ spec:
         nvidia.com/gpu: 4
 ```
 GPU を要求する Pod がデプロイされると、GKE は割り当て可能な GPU ノードが存在しない場合、新しい GPU Node をプロビジョニングします。(その際、Node に NVIDIA のドライバが自動的にインストールされます)
-料金は [GPU Pods 用の料金](https://cloud.google.com/kubernetes-engine/pricing)が課金されます
+料金は [GPU Pods 用の料金](https://cloud.google.com/kubernetes-engine/pricing)が課金されます。
 
 ## Compact placement Policy (GA)
 
 ## Spot VMs / Spot Pods (GA)
-プリエンプティブル VM と違い 24 時間の稼働時間制限がない Spot VM を GKE Standard の Node として利用可能になりました
+[Spot VM](https://cloud.google.com/kubernetes-engine/docs/concepts/spot-vms) という標準的な GCE インスタンスより安価な VM を GKE Standard の Node として利用可能になりました
+これまではプリエンプティブル VM という最大 24 時間の稼働時間制限がある安価な Node を利用することができましたが、最近はこの後継として、稼働時間制限のない Spot VM という安価な Node が利用可能になりました。
+
+Spot VM は GKE Autopilot では [Spot Pods](https://cloud.google.com/kubernetes-engine/docs/how-to/autopilot-spot-pods) という形で利用可能です。
+Spot Pods では GKE が自動的に Spot VM のスケジュールや taints / toleration の付与をしてくれます。
+Spot Pods を利用する際は、Compute Class と同様に nodeSelector や Node Affinity 設定で `cloud.google.com/gke-spot: "true"` の Node 上で Pod が稼働するよう指定するだけです。
+Spot VMs / Pods はステートレスなバッチワークロードや、コスト削減を目的として開発環境等での利用に適しています。
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+spec:
+  template:
+    metadata:
+      labels:
+        app: pi
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-spot: "true"
+      terminationGracePeriodSeconds: 25
+      containers:
+      - name: pi
+        image: perl:5.34.0
+        command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+      restartPolicy: Never
+  backoffLimit: 4
+```
+
+## CA location policy
+Cluster Autscaler で [Location Policy](https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler#location_policy) という機能が利用可能になりました。とはいっても普段はあまり気にするような機能でもなく
+
+GKE 1.24.1-gke.800 以降で、Cluster Autoscaler の分散ポリシーを変更することができます。
+* **BALANCED**...
+* **ANY**... 
+
 
 ## GKE Arm Nodes (Preview)
 GKE で ARM ベースの Node (Tau T2A) をサポート
@@ -129,7 +164,7 @@ Autopilot では利用できない
 マルチインスタンスとの違い
 
 
-## CA location policy
+
 
 # ネットワーク
 
