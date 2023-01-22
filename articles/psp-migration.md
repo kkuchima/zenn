@@ -12,13 +12,39 @@ published: false
 * PSP の後継として PSA がありますが、PSP を完全にカバーしているわけではないので移行に工夫が必要です
 * 
 
-# なぜ PSP の移行が必要なのか
-PSP とは
+# なぜ PodSecurityPolicy の移行が必要なのか
+[PodSecurityPolicy (以降 PSP)](https://kubernetes.io/docs/concepts/security/pod-security-policy/) は、Kubernetes クラスタに対するセキュリティポリシーを設定する機能です。Kubernetes 組み込みの Admission Controller として提供されています。PSP を活用することで、例えば特権コンテナや hostpath の利用など、Node 側に影響が出る可能性のある設定のコンテナのデプロイを防止できるようになります。
 
-PSP は Kubernetes 1.25 で Remove される
+ではなぜ PSP から移行しないといけないかというと、PSP は Kubernetes 1.21 で deprecated ステータスとなっており、1.25 で Remove されてしまうからです。
+これは Google Kubernetes Engine (GKE) を使っていても同様で、[GKE 1.25 以降では PSP が利用できなくなってしまう](https://cloud.google.com/kubernetes-engine/docs/deprecations/podsecuritypolicy)ため、1.24 以前の段階で PSP から他の機能へ移行する必要があります。
 
+PSP が削除される背景について、既に多くの記事で述べられているため本記事では深くは触れませんが、ポイントとしては以下になります：
+* 意図せず広範囲の権限を付与してしまいやすい
+→ PSP はユーザーアカウント or サービスアカウントに対してポリシーを設定するが、
+* どのポリシーが適用されているか分かりにくく混乱やエラーを引き起こしやすい
+気になる方は以下の公式ブログや KEP も読んでみてください。
+https://kubernetes.io/blog/2021/04/06/podsecuritypolicy-deprecation-past-present-and-future/#why-is-podsecuritypolicy-going-away
+https://github.com/kubernetes/enhancements/tree/master/keps/sig-auth/2579-psp-replacement
 
-# PodSecurity Admission (PSA)
+# PodSecurity Admission
+[PodSecurity Admission](https://cloud.google.com/kubernetes-engine/docs/how-to/podsecurityadmission) (以降 PSA) は PSP の後継となる Kubernetes 組み込みの Admission Controller です。PSP よりも、よりシンプルに設定できるのが特徴になっています。
+PSA では [Pod Security Standards](https://kubernetes.io/docs/concepts/security/pod-security-standards/) という Kubernetes 側で整備している、セキュリティ標準に沿った構成を強制することができます。
+
+Pod Security Standards では以下３種類のプロファイルが定義されています。
+
+|プロファイル|概要|
+|----|----|
+|Privileged|制限の無いポリシー。プロファイルの指定が無い場合のデフォルト値。|
+|Baseline|最低限の制限が設定されたポリシー。|
+|Restricted|ベストプラクティスに沿った、最も厳しいポリシー|
+
+また、PSP とは異なり各ポリシーが意図した挙動となっているかログ等から確認ができる(実際に Pod 作成等は拒否されない) モードが提供されています。
+これにより、現在稼働している環境への影響を確認した上でポリシーの適用を検討することができます。
+|モード|概要|
+|----|----|
+|Enforce | ポリシー違反により Pod の作成が拒否される。監査ログにイベントが追加される。|
+|Audit| ポリシー違反により Pod の作成が**拒否されない**。監査ログにイベントが追加される。|
+|Warn| ポリシー違反により Pod の作成が**拒否されない**。warning が表示される。|
 
 ## PSA の特徴
 Kubernetes に組み込まれているため、基本的にメンテナンスは不要
