@@ -152,10 +152,10 @@ GKE Standard で [Confidential GKE Nodes](https://cloud.google.com/kubernetes-en
 * GPU 非サポート
 * Node OS として Container-Optimized OS (COS) のみサポート
 
-## 時間共有 GPU (GA)
-GKE Standard で 時間共有 GPU が GA になりました。
+## Time-sharing GPUs (GA)
+GKE Standard で [Time-sharing (時間共有) GPUs](https://cloud.google.com/kubernetes-engine/docs/concepts/timesharing-gpus) が GA になりました。
 本機能を有効にすることで Node 上の単一の物理 GPU を複数のコンテナで共有可能になり、高いコスト効率を実現することができるようになります。
-時間共有 GPU を使用するワークロードは nodeSelector 等で以下 Label を指定するよりデプロイすることができます。物理 GPU の共有を許可するコンテナの最大数を指定することができます。
+Time-sharing GPUs を使用するワークロードは nodeSelector 等で以下 Label を指定することにより対象の Node 上にデプロイすることができます。
 ```yaml
 cloud.google.com/gke-max-shared-clients-per-gpu: "3"
 cloud.google.com/gke-gpu-sharing-strategy: time-sharing
@@ -165,9 +165,18 @@ GKE クラスタやノードプール単位で有効化・無効化可能
 
 GPU タイムシェアが有効化されたノードのラベルを指定することで、ワークロードをデプロ
 
-マルチインスタンスとの違い
-複数インスタンス GPU と時間共有 GPU の併用も可能
+似たような機能として[マルチインスタンス GPU](https://cloud.google.com/kubernetes-engine/docs/how-to/gpus-multi) がありますが、主な違いは以下となります：
+* マルチインスタンス GPU は現状 NVIDIA A100 GPU でのみ利用可能、Time-sharing GPUs は GKE で利用可能なすべての GPU で利用可能
+* マルチインスタンス GPU は 1 つの Pod が GPU を占有して利用するハードウェア分離の方式、Time-sharing GPUs はコンテキストスイッチによって共有
+* マルチインスタンス GPU は 1 つの GPU を最大 7 分割可能、Time-sharing GPUs は最大 48 コンテナで GPU を共有可能
 
+常に一定の GPU リソースを利用したい場合はマルチインスタンス GPU、GPU を占有する必要が無いワークロードの場合は Time-sharing GPUs が合うのではないかと思います。
+また物理的に分割されたマルチインスタンス GPU と違って、Time-sharing GPUs は時間を区切ってフルの GPU リソースを利用できるというのも違いになります。
+ちなみにマルチインスタンス GPU とTime-sharing GPUs を併用し、分割された各パーティションを複数コンテナで利用することもできます。
+
+
+
+マルチインスタンス GPU は 7 スライスまで分割は可能ですが、分割することで GPU リソースをフルに使えなくなります。例えば A100 は 40 GB GPU メモリーつんでますが、マルチインスタンス GPU として使うと最大 35 GB までしか使えません。Time Sharing は時間を区切って GPU リソースをフルに使うので、GPU メモリーを 40 GB フルで使いたいみたいなシナリオでは Time Sharing がいいです
 
 
 # ネットワーク
