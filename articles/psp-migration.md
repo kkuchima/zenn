@@ -70,45 +70,62 @@ Warning: would violate PodSecurity "restricted:latest": allowPrivilegeEscalation
 deployment.apps/nginx created
 ```
 
-## PSP との違い
-前述の通り、PSA では事前定義されたプロファイルを各 Namespace に設定するという方式をとっていて、 PSP に無かったシンプルさや Dry-run による影響範囲のわかりやすさを持っていますが、あらかじめ定義された 3 種類のポリシーしか使えず、PSP のようなカスタマイズ性が失われています。
-また、他にも PSP との大きな違いとして、PSP ではサポートしていた Mutation を PSA ではサポートしていないというのもあります。
-PSP と Pod Security Standards の細かな違いについては以下のドキュメントもご参照ください：
-https://kubernetes.io/docs/reference/access-authn-authz/psp-to-pod-security-standards/
-
-また、PSA では Namespace の Label に基づいてポリシーが設定されるため、アプリケーション開発者の方などが Namespace の変更権限を持っている場合は意図せず(or 意図的に) ポリシーが変更される可能性がある点に注意が必要です。そのような場合は PSA 設定前に Namespace に対する権限を制限する
-
 # PSP からの移行
-
-0. Decide whether Pod Security Admission is the right fit for your use case.
-1. Review namespace permissions
+PSP から PSA に移行する際の大まかな流れは以下のようになっています。
+0. PSA が要件にマッチしているか確認する
+1. Namespace の権限を確認する
 2. Simplify & standardize PodSecurityPolicies
-3. Update namespaces
-3-1. Identify an appropriate Pod Security level
-3-2. Verify the Pod Security level
-3-3. Enforce the Pod Security level
+3. Namespace の更新
+3-1. 適切な Pod Security レベルを特定する
+3-2. Pod Security レベルを検証する
+3-3. Pod Security レベルを強制する
 3-4. Bypass PodSecurityPolicy
 4. Review namespace creation processes
-5. Disable PodSecurityPolicy
+5. PSP の無効化
 
-# PSA 以外の移行候補
-OPA Gatekeeper (Policy Controller)
+## 0. PSA が要件にマッチしているか確認する
+### PSP と PSA の違い
+前述の通り、PSA では事前定義されたプロファイルを各 Namespace に設定するという方式をとっていて、 PSP に無かったシンプルさや Dry-run による影響範囲のわかりやすさが利点となっています。
+一方、PSA ではあらかじめ定義された 3 種類のポリシーしか使えず、PSP のようなカスタマイズ性が失われています。
+
+また、他にも PSP との大きな違いとして、PSP ではサポートしていた Mutation や一部フィールドを PSA ではサポートしていないというのもあります。
+PSP は Validation (検証) だけでなく、Mutation (変更) の機能も持っています。PSP により Pod spec が変更されている場合、PSP 無効化後に PSA 準拠しなくなったり、場合によってはアプリケーションの挙動に影響がでる可能性があります。Mutation に依存している Pod 
+
+* .spec.allowedHostPaths
+* .spec.allowedFlexVolumes
+* .spec.allowedCSIDrivers
+* .spec.forbiddenSysctls
+* .spec.runtimeClass
+
+PSP で　Mutation されているフィールドや PSA でカバーされていないオプションの一覧については以下のドキュメントもご参照ください：
+https://kubernetes.io/docs/reference/access-authn-authz/psp-to-pod-security-standards/
+
+### PSA 以外のオプション
+PSA が要件的に合わない場合、以下のオプションから
+
+* OPA Gatekeeper (Policy Controller)
 サポート付き、有償版の Policy Controller がある
 Rego によりポリシーを定義
 
-PSA はKubernetes に組み込まれているため、基本的にメンテナンス不要
 基となる Pod Security Standard
-
-
-Kyverno
+* Kyverno 
 yaml でポリシーを定義。validation/mutation をサポート
 
-CEL Admission
-独自実装
-(結論・提案) PSA + α が良いのでは？
+* CEL Admission
 
-Istio (istio-proxy, init) との組み合わせ
-Warn と Dry run の違い
+* その他 OSS や独自実装
+
+PSA はKubernetes に組み込まれているため、基本的にメンテナンス不要
+(結論・提案) PSA + α が良いのでは？
+## 1. Namespace の権限を確認する
+PSA では Namespace の Label に基づいてポリシーが設定されるため、アプリケーション開発者の方などが Namespace の変更権限を持っている場合は意図せず(or 意図的に) ポリシーが変更される可能性がある点に注意が必要です。
+そのような場合は PSA 設定前に Namespace に対する権限を制限する必要があります。
+
+
+
+
+
+
 
 
 # PSP から PSA への移行
@@ -203,3 +220,6 @@ GKE deprecation insight
 GKE security posture
 
 複数の PodSecurityPolicy が使用可能な場合、アドミッション コントローラは、検証に成功した最初のポリシーを使用します。ポリシーはアルファベット順に並べられ、コントローラは、変更ポリシーよりも非変更ポリシー（ポッドを変更しないポリシー）を優先します。
+
+Istio (istio-proxy, init) との組み合わせ
+Warn と Dry run の違い
