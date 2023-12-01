@@ -189,7 +189,7 @@ Capacity:
   pods:               32
 ```
 
-`nvidia-smi` コマンドも実行してみましょう。Pod から `Tesla T4` がアタッチされていることもわかると思います。
+`nvidia-smi` コマンドも実行してみましょう。Pod から `NVIDIA T4` がアタッチされていることもわかると思います。
 ```bash
 $ kubectl exec -it sts/tensorflow -- bash
 
