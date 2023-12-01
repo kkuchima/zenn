@@ -191,7 +191,7 @@ Capacity:
 
 `nvidia-smi` コマンドも実行してみましょう。Pod から `Tesla T4` がアタッチされていることもわかると思います。
 ```bash
-$ kubectl exec -it sts/tensorflow -- basha
+$ kubectl exec -it sts/tensorflow -- bash
 
 ________                               _______________
 ___  __/__________________________________  ____/__  /________      __
