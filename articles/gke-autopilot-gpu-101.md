@@ -165,6 +165,7 @@ tensorflow-jupyter           LoadBalancer   34.118.230.11    xx.xx.xx.xx   80:32
 
 Pod が作成できました。実際にアクセスしてチュートリアルを動かしてみます。  
 ![Jupyter Notebook](../images/gke-autopilot-gpu-101/jupyternotebook.png)
+ちゃんと動くことが確認できました。  
 
 また、自動的にプロビジョニングされた Node も念の為確認しておきます。describe してみるとちゃんと GPU が刺さっているというのがわかります。
 ```bash
