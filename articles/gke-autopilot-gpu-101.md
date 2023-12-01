@@ -27,7 +27,7 @@ Kubernetes API のエンドポイントを提供する kube-api server や Kuber
 
 GKE では Control Plane は Google が管理しており、ユーザー側で Control Plane の運用（アップグレードやセキュリティ対策、スケール等）をする必要はありません。  
 一方 Node についてはユーザー管理と Google 管理の 2 つのモードから選ぶことができます。Node をユーザー側で管理するクラスタを **GKE Standard**、Google で管理するクラスタ **GKE Autopilot** と呼びます。  
-![GKE の 2 つのモード](../images/gke-gpu-101/gke-mode.png)
+![GKE の 2 つのモード](../images/gke-autopilot-gpu-101/gke-mode.png)
 
 ## GKE Autopilot の特徴
 先述の通り、GKE Autopilot は Control Plane だけでなく Node も Google 管理になっています。  
@@ -68,7 +68,7 @@ spec:
 
 ## GKE Autopilot がサポートしている GPU の種類
 GKE Autopilot では 2023.12 現在、`NVIDIA L4`, `NVIDIA T4`, `NVIDIA A100 (40 or 80GB)` の GPU をサポートしています。また、GPU は 1 枚から利用可能なので、スモールスタートが非常にしやすくなっています。  
-![GKE Autopilot がサポートしている GPU](../images/gke-gpu-101/ap-supported-gpus.png)
+![GKE Autopilot がサポートしている GPU](../images/gke-autopilot-gpu-101/ap-supported-gpus.png)
 
 さらに、以下のように `cloud.google.com/gke-spot: "true"` というラベルを持つ Node を要求することにより、[Spot VMs](https://cloud.google.com/kubernetes-engine/docs/concepts/spot-vms) という標準的な VM に比べて安価な VM を利用しコストを圧縮することも可能です。
 ```yaml
@@ -81,7 +81,7 @@ spec:
 ## Image Streaming によるイメージ Pull の高速化
 ちなみに GKE Autpilot では [Image Streaming](https://cloud.google.com/kubernetes-engine/docs/how-to/image-streaming?hl=ja) という機能がデフォルトで有効になっています (1.25.5-gke.1000 以降)。  
 これはコンテナイメージのデータをストリーミングしイメージの Pull を高速化させる機能で、コンテナイメージ全体を Node に落とさずに Pod を立ち上げることが可能となるため、ML ワークロードなどサイズの大きいコンテナイメージの Pull 時間の短縮や NAP により Node が新しくプロビジョニングされた場合のスピンアップを高速にすることができるようになります。(Artifact Registry に格納されているコンテナイメージが対象となります)  
-![Image Streaming](../images/gke-gpu-101/image-streaming.png)
+![Image Streaming](../images/gke-autopilot-gpu-101/image-streaming.png)
 
 ## 実際に試してみる
 
@@ -164,7 +164,7 @@ tensorflow-jupyter           LoadBalancer   34.118.230.11    xx.xx.xx.xx   80:32
 ```
 
 Pod が作成できました。実際にアクセスしてチュートリアルを動かしてみます。  
-![Jupyter Notebook](../images/gke-gpu-101/jupyternotebook.png)
+![Jupyter Notebook](../images/gke-autopilot-gpu-101/jupyternotebook.png)
 
 また、自動的にプロビジョニングされた Node も念の為確認しておきます。describe してみるとちゃんと GPU が刺さっているというのがわかります。
 ```bash
@@ -209,7 +209,7 @@ $ docker run -u $(id -u):$(id -g) args...
 
 watch -droot@tensorflow-0:/tf# watch -d nvidia-smi
 ```
-![nvidia-smi](../images/gke-gpu-101/nvidia-smi.png)
+![nvidia-smi](../images/gke-autopilot-gpu-101/nvidia-smi.png)
 
 これで GKE Autopilot 上に GPU を使う Pod を簡単にデプロイすることができました。
 
