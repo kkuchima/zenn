@@ -126,7 +126,7 @@ https://cloudonair.withgoogle.com/events/gkehandson-q4
 
 # まとめ
 GKE をこれから学びたい・詳しくなりたい方向けに、おすすめの学習リソースをご紹介しました。  
-本記事で紹介したもの以外にも、リリースノートや X (旧 Twitter) による情報収集もおすすめです。 X では #gcpja というハッシュタグで日本語でのアップデート情報を流していたりするので興味があれば定期的に覗いてみてください。  
+本記事で紹介したもの以外にも、[リリースノート](https://cloud.google.com/kubernetes-engine/docs/release-notes)や X (旧 Twitter) による情報収集もおすすめです。 X では [#gcpja](https://twitter.com/hashtag/gcpja) というハッシュタグで日本語でのアップデート情報を流していたりするので興味があれば定期的に覗いてみてください。  
 ではみなさま素敵な GKE ライフを〜  
 
 明日は [Issei](https://zenn.dev/hoisjp) さんによる Cloud Workstations の記事です！お楽しみに！
