@@ -11,8 +11,29 @@ published: false
 今回は [Google Cloud をゼロから学ぶならこれ! おすすめの学習リソース](https://zenn.dev/google_cloud_jp/articles/6a8a0e571841ef)という素敵記事に倣って [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/docs/concepts/kubernetes-engine-overview?hl=ja) をこれから学びたい人向けにおすすめの学習リソース (無償のもの) を紹介します。  
 初学者向けのリソースだけでなく、実際のクラスタ設計にも役立つリソースを紹介します！
 
+# プロダクトの概要を知る
+そもそも GKE って何？という方はプロダクトの概要を知ることがから始めるのが良いかもしれません。  
+概要を知るのに良いコンテンツをいくつか紹介します。  
+
+## ブログ記事で学習する
+GKE の概要を紹介したブログ記事も多く存在しますので、ぜひ読んでみてください。  
+（初っ端から宣伝ですみませんが）一例として、私が以前書いた記事では、GKE の特徴的な機能のご紹介などをしています。もしご興味ありましたら読んでみてください。  
+https://gihyo.jp/article/2023/09/modern-app-development-on-google-cloud-02
+
+## Youtube 動画で学習する
+Youtube にも GKE の解説動画が公開されているので、基本的な概要を知るのに役立ちます。  
+英語では以下のように `GKE Essentials` というシリーズが公開されています。  
+https://www.youtube.com/playlist?list=PLIivdWyY5sqLQ3m7WJDfBdMMqO12Q0vqg
+
+また、日本語では `Google Cloud スタートアップ向けテクニカル ガイド` というシリーズの動画が短時間で情報がまとまっていて理解しやすいのではないかと思います。  
+https://youtu.be/rEMDQf16Jdc?si=zI5FUSVtPGpii-vX
+
+## App Modernization OnAir
+（最近はあまり頻繁に更新されていませんが）`App Modernization OnAir` というウェビナープログラムもプロダクトカットで有用な情報がまとまっていて学習リソースとしておすすめです。  
+https://cloudonair.withgoogle.com/events/solution-app-modernization
+
 # 事例から学ぶ
-まずどういう企業がどういう背景や構成で GKE を使っているかを知りたい場合、事例から学ぶのが良いかもしれません。  
+どういう企業がどういう背景や構成で GKE を使っているかを知りたい場合、事例から学ぶのも良い方法だと思います。  
 
 ## Google Cloud の事例ページや公式ブログから事例を探す
 GKE を実際に利用されているお客さんの事例を知りたい場合、まず確認すると良いのが Google Cloud の事例ページや公式ブログです。  
@@ -24,7 +45,6 @@ https://cloud.google.com/customers?hl=ja#/products=%E3%82%B3%E3%83%B3%E3%83%86%E
 ### Google Cloud の公式ブログ
 また、Google Cloud の公式ブログでも事例や最新情報が閲覧できます。  
 とはいえブログ記事の数も多いので、特定製品 (例: GKE) に絞って記事をみたい場合は `https://cloud.google.com/blog/ja/products/gke` とアクセスしていただくのが良いと思います。  
-![](/images/gke-korekara-learning/official-blog.png)
 https://cloud.google.com/blog/ja/products/gke?hl=ja
 
 ## イベントのアーカイブ動画から事例を探す
@@ -48,24 +68,6 @@ https://cloudonair.withgoogle.com/events/next-tokyo
 `Innovators Live Japan` はライブ配信型のウェビナープログラムで、その中でも「サーバレス・コンテナ」というカテゴリで GKE や Cloud Run に関連した情報発信を行っています。  
 お客さんの事例の話を中心に紹介しているので、興味があればこちらもご確認ください！アーカイブ閲覧可能です。  
 https://cloudonair.withgoogle.com/events/innovators-live-jp?tab=serverless_containers&expand=module:serverless_containers_top
-
-# プロダクトの概要を知る
-## Youtube 動画で学習する
-Youtube にも GKE の解説動画が公開されているので、基本的な概要を知るのに役立ちます。  
-英語では以下のように `GKE Essentials` というシリーズが公開されています。  
-https://www.youtube.com/playlist?list=PLIivdWyY5sqLQ3m7WJDfBdMMqO12Q0vqg
-
-また、日本語では `Google Cloud スタートアップ向けテクニカル ガイド` というシリーズの動画が短時間で情報がまとまっていて理解しやすいのではないかと思います。  
-https://youtu.be/rEMDQf16Jdc?si=zI5FUSVtPGpii-vX
-
-## ブログ記事で学習する
-GKE の概要を紹介したブログ記事も多く存在しますので、ぜひ読んでみてください。  
-一例として、私が以前書いた記事では、GKE の特徴的な機能のご紹介などをしています。もしご興味ありましたら読んでみてください。  
-https://gihyo.jp/article/2023/09/modern-app-development-on-google-cloud-02
-
-## App Modernization OnAir
-（最近はあまり頻繁に更新されていませんが）`App Modernization OnAir` というウェビナープログラムもプロダクトカットで有用な情報がまとまっていて学習リソースとしておすすめです。  
-https://cloudonair.withgoogle.com/events/solution-app-modernization
 
 # サンプルコード・マニフェストを試す
 実際の環境であれこれサンプルを動かして試したいという場合は、Google Cloud が公開しているサンプルコード、マニフェストを使ってみるのも良いかと思います。  
