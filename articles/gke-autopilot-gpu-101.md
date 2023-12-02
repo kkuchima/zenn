@@ -4,7 +4,7 @@ emoji: "🤖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [GCP, GoogleCloud, GKE]
 publication_name: "google_cloud_jp"
-published: false
+published: true
 ---
 この記事は [Google Cloud Japan Advent Calendar 2023 (入門編)](https://zenn.dev/google_cloud_jp/articles/65eb509ce7dc91) の 2 日目の記事です。  
 
@@ -31,7 +31,7 @@ GKE では Control Plane は Google が管理しており、ユーザー側で C
 
 ## GKE Autopilot の特徴
 先述の通り、GKE Autopilot は Control Plane だけでなく Node も Google 管理になっています。  
-具体的には Node のサイズや台数調整などリソース管理の自動化や Node のアップグレード作業の自動化をしてくれることで管理負荷の低減を実現しています。  
+具体的には Node のサイズや台数調整などリソース管理の自動化や Node のアップグレード作業等の自動化をしてくれることで管理負荷の低減を実現しています。  
 
 GKE Autopilot は Node が管理不要なモデルになっているものの、何かしら特殊なアーキテクチャで構成されているわけではありません。通常の GKE クラスタをベースにしつつ各種自動化機能を活用することにより実現しています。  
 したがって、Job や DaemonSet など Kubernetes の基本リソースをデプロイできますし、Istio や ArgoCD など多くの Kubernetes のエコシステムの実行もサポートしています。(後述するセキュリティ要件を満たしている必要があります)  
@@ -45,7 +45,7 @@ GKE Autopilot は Node が管理不要なモデルになっているものの、
 
 ## GKE Autpilot は何をしてくれるのか？
 GKE Autopilot で GPU を利用したい場合、何をしたら良いのでしょうか。答えとしては **GPU を要求する Pod を作成するだけ**です。簡単ですね。  
-以下のようにマニフェストで GPU のラベルを持つ Node を選択するだけで、あとは GKE の [Node Auto-Provisioning (NAP)](https://cloud.google.com/kubernetes-engine/docs/concepts/node-auto-provisioning) という機能により、GPU Node がプロビジョニングされます。  
+以下のようにマニフェストで GPU のラベルを持つ Node を選択するだけで、あとは GKE の [Node Auto-Provisioning (NAP)](https://cloud.google.com/kubernetes-engine/docs/concepts/node-auto-provisioning) という機能により、GPU Node が自動的にプロビジョニングされます。  
 プロビジョニングされた GPU Node には GPU デバイスドライバが自動的にインストールされており、利用者側での管理も不要です。  
 また `spec.containers[].resources.limits` で利用する GPU の数を制御します。以下は NVIDIA T4 GPU を 1 枚使う例です。
 ```yaml:gpu-pod.yaml
@@ -67,7 +67,7 @@ spec:
 ```
 
 ## GKE Autopilot がサポートしている GPU の種類
-GKE Autopilot では 2023.12 現在、`NVIDIA L4`, `NVIDIA T4`, `NVIDIA A100 (40 or 80GB)` の GPU をサポートしています。また、GPU は 1 枚から利用可能なので、スモールスタートが非常にしやすくなっています。  
+GKE Autopilot では 2023.12 現在、`NVIDIA L4`, `NVIDIA T4`, `NVIDIA A100 (40 or 80GB)` の GPU をサポートしています。また、GPU は全て 1 枚から利用可能なので、スモールスタートが非常にしやすくなっています。  
 ![GKE Autopilot がサポートしている GPU](../images/gke-autopilot-gpu-101/ap-supported-gpus.png)
 
 さらに、以下のように `cloud.google.com/gke-spot: "true"` というラベルを持つ Node を要求することにより、[Spot VMs](https://cloud.google.com/kubernetes-engine/docs/concepts/spot-vms) という標準的な VM に比べて安価な VM を利用しコストを圧縮することも可能です。
@@ -218,7 +218,7 @@ watch -droot@tensorflow-0:/tf# watch -d nvidia-smi
 GKE、特に GKE Autopilot は簡単に GPU ワークロードを動かせるよという話をさせていただきました。  
 本記事で言いたかったことをまとめると以下です:
 * GKE Autopilot は Kubernetes / GKE の良いところをそのまま残しつつ**運用負荷の低減**、**各種プラクティスの適用**、**セキュリティの向上**を実現しており、**アプリケーション開発に集中できる Kubernetes クラスタ**です
-* GKE Autopilot では GPU を要求する Pod を作成するだけで GPU ワークロードをデプロイできます (GPU ドライバのインストールや管理も不要です)
+* GKE Autopilot では GPU を要求する Pod を作成するだけで GPU ワークロードをデプロイできます (Node や GPU ドライバのインストールや管理も不要です)
 
 この記事を読んでいただいて興味を持ってくれた方がいらっしゃいましたらぜひお試しください！  
 
