@@ -14,7 +14,7 @@ published: true
 * GKE で GPU 使うのめっちゃ簡単
 * クラスタを構築して `nodeSelector` 等で GPU Node を指定をしたマニフェストを適用するだけ (GPU デバイスドライバのインストールや管理も不要)
 
-# Google Kubernetes Engine (GKE)　とは
+# Google Kubernetes Engine (GKE) とは
 Google Kubernetes Engine（以降 GKE）は Google Cloud が提供するフルマネージドな Kubernetes プラットフォームです。  
 自動スケールや自動アップグレードなど、Kubernetes をより簡単かつ安全に使うための機能を多く提供しています。GKE の良さについて以下の記事でも紹介をしているので、ご興味ある方は読んでみてください。  
 https://gihyo.jp/article/2023/09/modern-app-development-on-google-cloud-02
@@ -69,6 +69,7 @@ spec:
 ## GKE Autopilot がサポートしている GPU の種類
 GKE Autopilot では 2023.12 現在、`NVIDIA L4`, `NVIDIA T4`, `NVIDIA A100 (40 or 80GB)` の GPU をサポートしています。また、GPU は全て 1 枚から利用可能なので、スモールスタートが非常にしやすくなっています。  
 ![GKE Autopilot がサポートしている GPU](/images/gke-autopilot-gpu-101/ap-supported-gpus.png)
+https://cloud.google.com/kubernetes-engine/docs/how-to/autopilot-gpus?hl=en#supported-quantities
 
 さらに、以下のように `cloud.google.com/gke-spot: "true"` というラベルを持つ Node を要求することにより、[Spot VMs](https://cloud.google.com/kubernetes-engine/docs/concepts/spot-vms) という標準的な VM に比べて安価な VM を利用しコストを圧縮することも可能です。
 ```yaml
@@ -222,4 +223,4 @@ GKE、特に GKE Autopilot は簡単に GPU ワークロードを動かせるよ
 
 この記事を読んでいただいて興味を持ってくれた方がいらっしゃいましたらぜひお試しください！  
 
-（明日はいないので）明後日は [Issei](https://zenn.dev/hoisjp) さんによる Cloud Workstations の記事です！お楽しみに！
+（枠が空いてたので）明日も私による GKE の記事です！GKE のおすすめ学習リソースを紹介します。お楽しみに〜
