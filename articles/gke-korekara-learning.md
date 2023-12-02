@@ -8,7 +8,7 @@ published: false
 ---
 この記事は [Google Cloud Japan Advent Calendar 2023 (入門編)](https://zenn.dev/google_cloud_jp/articles/65eb509ce7dc91) の 3 日目の記事です。  
 
-今回は [Google Cloud をゼロから学ぶならこれ! おすすめの学習リソース](https://zenn.dev/google_cloud_jp/articles/6a8a0e571841ef)という素敵記事に倣って [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/docs/concepts/kubernetes-engine-overview?hl=ja) をこれから学びたい人向けにおすすめの学習リソース (無償のもの) を紹介します。  
+今回は [Google Cloud をゼロから学ぶならこれ! おすすめの学習リソース](https://zenn.dev/google_cloud_jp/articles/6a8a0e571841ef)という素敵記事に倣って [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/docs/concepts/kubernetes-engine-overview?hl=ja) をこれから学びたい・詳しくなりたい人向けにおすすめの学習リソース (無償のもの) を紹介します。  
 初学者向けのリソースだけでなく、実際のクラスタ設計にも役立つリソースを紹介します！
 
 # プロダクトの概要を知る
