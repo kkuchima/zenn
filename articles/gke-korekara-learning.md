@@ -8,11 +8,8 @@ published: false
 ---
 この記事は [Google Cloud Japan Advent Calendar 2023 (入門編)](https://zenn.dev/google_cloud_jp/articles/65eb509ce7dc91) の 3 日目の記事です。  
 
-今回は [Google Cloud をゼロから学ぶならこれ! おすすめの学習リソース](https://zenn.dev/google_cloud_jp/articles/6a8a0e571841ef)という素敵記事に倣って Google Kubernetes Engine (GKE) をこれから学びたい人向けにおすすめの学習リソース (無償のもの) を紹介します。  
+今回は [Google Cloud をゼロから学ぶならこれ! おすすめの学習リソース](https://zenn.dev/google_cloud_jp/articles/6a8a0e571841ef)という素敵記事に倣って [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/docs/concepts/kubernetes-engine-overview?hl=ja) をこれから学びたい人向けにおすすめの学習リソース (無償のもの) を紹介します。  
 初学者向けのリソースだけでなく、実際のクラスタ設計にも役立つリソースを紹介します！
-
-ちなみに、そもそも GKE って何？どういう特徴があるの？という方は以下の記事でも紹介していますので、ご興味あれば読んでみてください。  
-https://gihyo.jp/article/2023/09/modern-app-development-on-google-cloud-02
 
 # 事例から学ぶ
 まずどういう企業がどういう背景や構成で GKE を使っているかを知りたい場合、事例から学ぶのが良いかもしれません。  
@@ -45,10 +42,23 @@ https://cloudonair.withgoogle.com/events/next-tokyo
 お客さんの事例の話を中心に紹介しているので、興味があればこちらもご確認ください！アーカイブ閲覧可能です。  
 https://cloudonair.withgoogle.com/events/innovators-live-jp?tab=serverless_containers&expand=module:serverless_containers_top
 
-### App Modernization OnAir
-事例というよりはプロダクト観点での情報発信という色が強いのですが、`App Modernization OnAir` というウェビナーのアーカイブも学習材料として有用な情報がまとまっています。  
-https://cloudonair.withgoogle.com/events/solution-app-modernization
+# プロダクトの概要を知る
+## Youtube 動画で学習する
+Youtube にも GKE の解説動画が公開されているので、基本的な概要を知るのに役立ちます。  
+英語では以下のように `GKE Essentials` というシリーズが公開されています。  
+https://www.youtube.com/playlist?list=PLIivdWyY5sqLQ3m7WJDfBdMMqO12Q0vqg
 
+また、日本語では `Google Cloud スタートアップ向けテクニカル ガイド` というシリーズの動画が短時間で情報がまとまっていて理解しやすいのではないかと思います。  
+https://youtu.be/rEMDQf16Jdc?si=zI5FUSVtPGpii-vX
+
+## ブログ記事で学習する
+GKE の概要を紹介したブログ記事も多く存在しますので、ぜひ読んでみてください。  
+一例として、私が以前書いた記事では、GKE の特徴的な機能のご紹介などをしていますので、もしご興味ありましたらよんでみてください。  
+https://gihyo.jp/article/2023/09/modern-app-development-on-google-cloud-02
+
+## App Modernization OnAir
+（最近はあまり頻繁に更新されていませんが）`App Modernization OnAir` というウェビナーのアーカイブもプロダクトカットでの学習材料として有用な情報がまとまっていておすすめです。  
+https://cloudonair.withgoogle.com/events/solution-app-modernization
 
 # サンプルコード・マニフェストを試す
 実際の環境であれこれサンプルを動かして試したいという場合は、Google Cloud が公開しているサンプルコード、マニフェストを使ってみるのも良いかと思います。  
@@ -68,7 +78,6 @@ https://github.com/GoogleCloudPlatform/gke-networking-recipes
 ### AI/ML on GKE
 AI/ML ワークロードを GKE で動かす場合のサンプル集です。スタートアップの遅延を小さくするためのプラクティスなども公開されています。  
 https://github.com/GoogleCloudPlatform/ai-on-gke
-
 
 # 公式のベストプラクティス ドキュメントを読み込む
 公式ドキュメントでは Google Cloud としておすすめしている GKE の設定をさまざまな観点から紹介しています。  
