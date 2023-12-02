@@ -17,7 +17,7 @@ published: false
 ## Google Cloud Blog から事例を探す
 GKE を実際に利用されているお客さんの事例を知りたい場合、まず確認すると良いのが Google Cloud の公式ブログです。  
 とはいえブログ記事の数も多いので、特定製品 (例: GKE) に絞って記事をみたい場合は `https://cloud.google.com/blog/ja/products/gke` とアクセスしていただくのが良いと思います。  
-![](../images/gke-korekara-learning/official-blog.png)
+![](/images/gke-korekara-learning/official-blog.png)
 https://cloud.google.com/blog/ja/products/gke?hl=ja
 
 ## イベントのアーカイブ動画から事例を探す
