@@ -80,7 +80,7 @@ https://cloud.google.com/kubernetes-engine/docs/samples?hl=ja
 ## ジャンプスタート ソリューション
 [ジャンプスタート ソリューション](https://cloud.google.com/solutions?hl=ja#section-3) には各プロダクトを使ったリファレンス アーキテクチャが載っており、Google Cloud コンソール上でもワンクリックで環境デプロイできるようになっています。  
 GKE を使ったソリューションもあるので、まずはここから試してみるのも良いかと思います。
-![](../images/gke-korekara-learning/jumpstart-sol.png)  
+![](/images/gke-korekara-learning/jumpstart-sol.png)  
 https://cloud.google.com/solutions/ecommerce-web-app?hl=ja
 
 ## GitHub 上のサンプルマニフェスト集
