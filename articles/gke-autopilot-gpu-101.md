@@ -81,7 +81,7 @@ spec:
 
 ## Image Streaming によるイメージ Pull の高速化
 ちなみに GKE Autpilot では [Image Streaming](https://cloud.google.com/kubernetes-engine/docs/how-to/image-streaming?hl=ja) という機能がデフォルトで有効になっています (1.25.5-gke.1000 以降)。  
-これはコンテナイメージのデータをストリーミングしイメージの Pull を高速化させる機能で、コンテナイメージ全体を Node に落とさずに Pod を立ち上げることが可能となるため、ML ワークロードなどサイズの大きいコンテナイメージの Pull 時間の短縮や NAP により Node が新しくプロビジョニングされた場合のスピンアップを高速にすることができるようになります。(Artifact Registry に格納されているコンテナイメージが対象となります)  
+これはコンテナイメージのデータをストリーミングし Pod の立ち上げを高速化させる機能で、Node がコンテナイメージを Pull する際イメージ全体を Node に落とさずに Pod を立ち上げることが可能となるため、ML ワークロードなどサイズの大きいコンテナイメージの Pull にかかる時間の短縮や NAP により Node が新しくプロビジョニングされた場合のスピンアップを高速にすることができるようになります。(Artifact Registry に格納されているコンテナイメージが対象となります)  
 ![Image Streaming](/images/gke-autopilot-gpu-101/image-streaming.png)
 
 ## 実際に試してみる
