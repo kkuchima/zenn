@@ -4,7 +4,7 @@ emoji: "🦄"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [GCP, GoogleCloud, GKE]
 publication_name: "google_cloud_jp"
-published: false
+published: true
 ---
 この記事は [Google Cloud Japan Advent Calendar 2023 (入門編)](https://zenn.dev/google_cloud_jp/articles/65eb509ce7dc91) の 3 日目の記事です。  
 
