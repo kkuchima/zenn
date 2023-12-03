@@ -1,6 +1,6 @@
 ---
 title: "GKE をこれから学びたい・詳しくなりたい人向け！おすすめ学習リソース集"
-emoji: "🦄"
+emoji: "🔜"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [GCP, GoogleCloud, GKE]
 publication_name: "google_cloud_jp"
