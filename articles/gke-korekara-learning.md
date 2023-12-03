@@ -12,7 +12,7 @@ published: false
 初学者向けのリソースだけでなく、実際のクラスタ設計にも役立つリソースを紹介します！
 
 # プロダクトの概要を知る
-そもそも GKE って何？という方はプロダクトの概要を知ることがから始めるのが良いかもしれません。  
+そもそも GKE って何？という方はプロダクトの概要を知ることから始めるのが良いかもしれません。  
 概要を知るのに良いコンテンツをいくつか紹介します。  
 
 ## ブログ記事で学習する
@@ -20,8 +20,8 @@ published: false
 （初っ端から宣伝ですみませんが）一例として、私が以前書いた記事では、GKE のアーキテクチャや特徴のご紹介などをしています。もしご興味ありましたら読んでみてください。  
 https://gihyo.jp/article/2023/09/modern-app-development-on-google-cloud-02
 
-## Youtube 動画で学習する
-Youtube にも GKE の解説動画が公開されているので、基本的な概要を知るのに役立ちます。  
+## YouTube 動画で学習する
+YouTube にも GKE の解説動画が公開されているので、基本的な概要を知るのに役立ちます。  
 例えば、英語では以下のように `GKE Essentials` というシリーズが公開されています。  
 https://www.youtube.com/playlist?list=PLIivdWyY5sqLQ3m7WJDfBdMMqO12Q0vqg
 
@@ -61,7 +61,8 @@ https://cloudonair.withgoogle.com/events/google-cloud-day-23
 https://cloudonair.withgoogle.com/events/modern-app-summit-23q3
 
 ### Google Cloud Next Tokyo ’23
-2023 年 12 月 3 日現在、基調講演のみアーカイブ動画が閲覧可能となっていますが、今後ブレイクアウトセッションも閲覧可能となる予定です！  
+2023 年 11 月に開催された `Google Cloud Next Tokyo ’23` でも多くの事例が発表されました。  
+2023 年 12 月 3 日現在、基調講演のアーカイブ動画のみが閲覧可能となっています。  
 https://cloudonair.withgoogle.com/events/next-tokyo
 
 ### Innovators Live Japan 
@@ -76,8 +77,14 @@ https://cloudonair.withgoogle.com/events/innovators-live-jp?tab=serverless_conta
 GKE の公式ドキュメント内で紹介されているようなサンプルコードが公開されています。  
 https://cloud.google.com/kubernetes-engine/docs/samples?hl=ja
 
-## Github 上のサンプルマニフェスト集
-Github 上にもサンプルコードやマニフェストが公開されているリポジトリがあります。  
+## ジャンプスタート ソリューション
+[ジャンプスタート ソリューション](https://cloud.google.com/solutions?hl=ja#section-3) には各プロダクトを使ったリファレンス アーキテクチャが載っており、Google Cloud コンソール上でもワンクリックで環境デプロイできるようになっています。  
+GKE を使ったソリューションもあるので、まずはここから試してみるのも良いかと思います。
+![](../images/gke-korekara-learning/jumpstart-sol.png)  
+https://cloud.google.com/solutions/ecommerce-web-app?hl=ja
+
+## GitHub 上のサンプルマニフェスト集
+GitHub 上にもサンプルコードやマニフェストが公開されているリポジトリがあります。  
 その中でも私が個人的によく活用しているものをいくつか紹介します。  
 
 ### GKE Networking Recipes
