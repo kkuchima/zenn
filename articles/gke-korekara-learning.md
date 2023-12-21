@@ -62,6 +62,7 @@ https://cloudonair.withgoogle.com/events/modern-app-summit-23q3
 
 ### Google Cloud Next Tokyo ’23
 2023 年 11 月に開催された `Google Cloud Next Tokyo ’23` でも多くの事例が発表されました。  
+GKE の最新アップデートや事例紹介、高度な活用方法に関するセッションも公開されています。  
 https://cloudonair.withgoogle.com/events/next-tokyo
 
 ### Innovators Live Japan 
