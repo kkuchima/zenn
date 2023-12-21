@@ -62,7 +62,6 @@ https://cloudonair.withgoogle.com/events/modern-app-summit-23q3
 
 ### Google Cloud Next Tokyo ’23
 2023 年 11 月に開催された `Google Cloud Next Tokyo ’23` でも多くの事例が発表されました。  
-2023 年 12 月 3 日現在、基調講演のアーカイブ動画のみが閲覧可能となっています。  
 https://cloudonair.withgoogle.com/events/next-tokyo
 
 ### Innovators Live Japan 
