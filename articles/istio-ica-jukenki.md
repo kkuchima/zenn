@@ -38,6 +38,7 @@ https://training.linuxfoundation.org/certification/istio-certified-associate-ica
 あまり準備期間は確保できませんでしたが、以下のように試験の準備を進めました。  
 1. 受験申し込み
 2. 試験の Important Instructions や FAQ を読む
+
 https://docs.linuxfoundation.org/tc-docs/certification/important-instructions-ica
 
 https://docs.linuxfoundation.org/tc-docs/certification/frequently-asked-questions-ica
