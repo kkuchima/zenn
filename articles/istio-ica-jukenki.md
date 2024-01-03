@@ -22,7 +22,7 @@ https://training.linuxfoundation.org/certification/istio-certified-associate-ica
 * 受験に関する事前要件：特になし
 
 出題範囲 (2024 年 01 月時点) は以下のようになっており、Istio の基本的な機能の使い方やカスタマイズ、トラブルシューティング方法についての知識が求められます。
-![](images/ica-totta/agenda.png)
+![](/images/ica-totta/agenda.png)
 
 試験中は Istio の公式ドキュメント (https://istio.io/) を閲覧することが可能です。  
 試験対策の学習を通して Istio の利用方法について網羅的に学ぶことができるため、個人的な感想としては実務で **Istio をこれから使う方**や現在利用しているけど**知識に偏りがある方**などにおすすめできる試験なのではないかと思います。  
