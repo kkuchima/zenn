@@ -3,7 +3,7 @@ title: "Istio Certified Associate (ICA) を取得した"
 emoji: "🚢"
 type: "idea" # tech: 技術記事 / idea: アイデア
 topics: [Istio]
-published: false
+published: true
 ---
 Istio Certified Associate (ICA) という資格を取得したので、備忘録的に情報を残しておきます。2024 年 01 月時点での情報となるので、念の為最新情報は公式サイトで確認をお願いします。  
 https://training.linuxfoundation.org/certification/istio-certified-associate-ica/
