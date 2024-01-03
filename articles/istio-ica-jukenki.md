@@ -57,7 +57,7 @@ https://academy.tetrate.io/courses/istio-fundamentals
 
 ### 2. Istio 公式ドキュメント
 試験中に唯一閲覧可能なドキュメントです。試験中にサイト内の検索窓が利用できなくて焦ったので、事前にドキュメント内のどのセクションにどんな内容が書いてるかを（ざっくりでも良いので）把握するのが良いと思います。  
-https://istio.io/
+https://istio.io/latest/docs/
 
 ただ、改めて見てみると[公式のページ](https://docs.linuxfoundation.org/tc-docs/certification/certification-resources-allowed#istio-certified-associate-ica)には以下のように記載があるので、私の検索の仕方が悪かった可能性が高いです...
 `use the search function provided on https://istio.io/latest/docs/ however, they may only open search results that have a domain matching the sites listed above`
