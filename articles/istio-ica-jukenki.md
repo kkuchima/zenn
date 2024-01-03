@@ -57,9 +57,7 @@ https://academy.tetrate.io/courses/istio-fundamentals
 https://istio.io/
 
 ただ、改めて見てみると[公式のページ](https://docs.linuxfoundation.org/tc-docs/certification/certification-resources-allowed#istio-certified-associate-ica)には以下のように記載があるので、私の検索の仕方が悪かった可能性が高いです...
-```
-use the search function provided on https://istio.io/latest/docs/ however, they may only open search results that have a domain matching the sites listed above
-```
+`use the search function provided on https://istio.io/latest/docs/ however, they may only open search results that have a domain matching the sites listed above`
 
 ### 3. 模擬試験
 [Mesh Week](https://www.youtube.com/playlist?list=PLy0Gle4XyvbG0rQBZ3dUCvxtekoJ7XjCr) のメンバーが作ったと思われる模擬試験です。どんな感じの試験が出題されるかを知るために最初に試してみても良いかと思います。  
