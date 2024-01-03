@@ -39,7 +39,9 @@ https://training.linuxfoundation.org/certification/istio-certified-associate-ica
 1. 受験申し込み
 2. 試験の Important Instructions や FAQ を読む
 https://docs.linuxfoundation.org/tc-docs/certification/important-instructions-ica
+
 https://docs.linuxfoundation.org/tc-docs/certification/frequently-asked-questions-ica
+
 3. 試験対策の実施
 
 ## おすすめ学習リソース
