@@ -24,7 +24,7 @@ https://training.linuxfoundation.org/certification/istio-certified-associate-ica
 出題範囲 (2024 年 01 月時点) は以下のようになっており、Istio の基本的な機能の使い方やカスタマイズ、トラブルシューティング方法についての知識が求められます。
 ![](/images/ica-totta/agenda.png)
 
-試験中は Istio の公式ドキュメント (https://istio.io/) を閲覧することが可能です。  
+試験中は Istio の公式ドキュメント (https://istio.io/latest/docs/) を閲覧することが可能です。  
 試験対策の学習を通して Istio の利用方法について網羅的に学ぶことができるため、個人的な感想としては実務で **Istio をこれから使う方**や現在利用しているけど**知識に偏りがある方**などにおすすめできる試験なのではないかと思います。  
 
 # 試験準備
@@ -52,7 +52,7 @@ https://docs.linuxfoundation.org/tc-docs/certification/frequently-asked-question
 ### 1. Tetrate Academy の Istio Fundamentals
 （試験対策とか関係なく）おすすめの教材です。Istio の基本的な仕組みや機能について学ぶことができます。  
 また、ICA は [Tetrate の Istio 認定資格](https://academy.tetrate.io/courses/certified-istio-administrator)がもとになっているように見受けられるので、試験対策としてもぴったりだと思います。  
-私は試験前日から着手したので時間の都合上全てのセクションは通せませんでした(出題範囲と照らし合わせて出題されそうな部分にフォーカスしました)が、余裕がある方は一通り通していただくのが良いと思います。  
+私は試験前日から着手したので時間の都合上全てのセクションは通せませんでした (出題範囲と照らし合わせて出題されそうな部分にフォーカスしました) が、余裕がある方は一通り通していただくのが良いと思います。  
 https://academy.tetrate.io/courses/istio-fundamentals
 
 ### 2. Istio 公式ドキュメント
@@ -72,7 +72,7 @@ https://www.manning.com/books/istio-in-action
 
 # 試験当日~結果通知まで
 ## PSI Secure Browser との格闘
-数年ぶりに Linux Foundation の試験を受けたので当日は色々と大変でした。特に PSI Secure Browser なるものがすんなり試験を開始してくれずに苦労しました。  
+数年ぶりに Linux Foundation の試験を受けたので当日は色々と大変でした。特に PSI Secure Browser なるものがすんなり試験を開始してくれずに苦労しました。(私が CKA / CKAD 受験した頃には無かったので)  
 私の場合、試験に関係のないアプリケーション（Mac の Sidecar Relay) が動いているということで試験を開始できず、当該アプリケーションの正しい落とし方がよく分からなかったので Bluetooth を切ってプロセスを直接落としてなんとか始めることができました。  
 
 ## 試験環境
