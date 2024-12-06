@@ -4,7 +4,7 @@ emoji: "🤖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [GCP, GoogleCloud, GKE, Gemma, 生成AI]
 publication_name: "google_cloud_jp"
-published: false
+published: true
 ---
 [Google Cloud Japan Advent Calendar 2024](https://zenn.dev/google_cloud_jp/articles/7799cce9f23cf0) の 3 日目（だったはず）の記事です。  
 本記事では、[GKE Autopilot](https://cloud.google.com/kubernetes-engine/docs/concepts/autopilot-overview) 上で [Gemma2](https://blog.google/technology/developers/google-gemma-2/) をいい感じに動的にスケールするようにホストしてみます。今回は推論のユースケースをメインで扱います。  
@@ -32,7 +32,7 @@ Gemma などオープンモデルを自前でホストするモチベーショ�
 
 # まずはシンプルな構成でデプロイしてみる
 ではまず、ほぼ[公式のチュートリアル](https://cloud.google.com/kubernetes-engine/docs/tutorials/serve-gemma-gpu-vllm)通りに Gemma2 をデプロイします。  
-推論ライブラリとしては [vLLM](https://docs.vllm.ai/en/latest/) を利用し同期的に推論させます。今回は vLLM を利用しますが、もちろんコンテナ化されていれば [Hugging Face TGI](https://cloud.google.com/kubernetes-engine/docs/tutorials/serve-gemma-gpu-tgi)や [TensorRT-LLM](https://cloud.google.com/kubernetes-engine/docs/tutorials/serve-gemma-gpu-tensortllm) なども利用できます。  
+推論ライブラリとしては [vLLM](https://docs.vllm.ai/en/latest/) を利用し同期的に推論させます。今回は vLLM を利用しますが、もちろんコンテナ化されていれば [Hugging Face TGI](https://cloud.google.com/kubernetes-engine/docs/tutorials/serve-gemma-gpu-tgi) や [TensorRT-LLM](https://cloud.google.com/kubernetes-engine/docs/tutorials/serve-gemma-gpu-tensortllm) なども利用できます。  
 
 ## Hugging Face のアクセストークンを取得する
 まず [Hugging Face](https://huggingface.co/) のアクセストークンを取得します。Hugging Face のアカウントを作っていない場合は事前に作成しておきます。  
