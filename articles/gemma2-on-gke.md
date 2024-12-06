@@ -31,7 +31,8 @@ Gemma などオープンモデルを自前でホストするモチベーショ�
 * オンプレミスなどクラウド外でホストしたい、など  
 
 # まずはシンプルな構成でデプロイしてみる
-ではまず、ほぼ[公式のチュートリアル](https://cloud.google.com/kubernetes-engine/docs/tutorials/serve-gemma-gpu-vllm)通りに Gemma2 をデプロイします。推論ライブラリとしては [vLLM](https://docs.vllm.ai/en/latest/) を利用し同期的に推論させます。  
+ではまず、ほぼ[公式のチュートリアル](https://cloud.google.com/kubernetes-engine/docs/tutorials/serve-gemma-gpu-vllm)通りに Gemma2 をデプロイします。  
+推論ライブラリとしては [vLLM](https://docs.vllm.ai/en/latest/) を利用し同期的に推論させます。今回は vLLM を利用しますが、もちろんコンテナ化されていれば [Hugging Face TGI](https://cloud.google.com/kubernetes-engine/docs/tutorials/serve-gemma-gpu-tgi)や [TensorRT-LLM](https://cloud.google.com/kubernetes-engine/docs/tutorials/serve-gemma-gpu-tensortllm) なども利用できます。  
 
 ## Hugging Face のアクセストークンを取得する
 まず [Hugging Face](https://huggingface.co/) のアクセストークンを取得します。Hugging Face のアカウントを作っていない場合は事前に作成しておきます。  
