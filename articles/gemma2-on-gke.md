@@ -387,7 +387,7 @@ vLLM コンテナの初期化処理は、ログを確認すると Pod の立ち�
 その中でも推論時のモデルの扱いとして**多数のノードから読み込まれる**ことがメインであることを考えると、候補としては以下が考えられます。  
 * [Cloud Storage](https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/cloud-storage-fuse-csi-driver?hl=ja)
   * GCS Fuse CSI を使って、GCS バケットを Fuse マウントし利用 (ROX や RWX アクセスモードをサポート)
-  * ストレージ単価が低く大容量なデータを格納することに向いている。またコンソール含めた UI が存在するのでデータの管理もしやすい。
+  * ストレージ単価が低く大容量なデータを格納することに向いている。またコンソールや CLI が存在しでデータの管理もしやすい。
   * 一方、他の選択肢と比べるとレイテンシーは大きく、GCS は I/O オペレーションにも課金されるためファイル数などが増えるとコスト増となる可能性あり。
   * GCS Fuse では Read Cache 機能がありレイテンシーやオペレーションコストの削減が期待できるが、GKE Autopilot のように都度新しい Node をプロビジョニングする形式だと効果はあまり期待できない。
 * [Filestore](https://cloud.google.com/filestore/docs/csi-driver)
