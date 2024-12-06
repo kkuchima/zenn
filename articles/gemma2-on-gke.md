@@ -7,7 +7,7 @@ publication_name: "google_cloud_jp"
 published: false
 ---
 [Google Cloud Japan Advent Calendar 2024](https://zenn.dev/google_cloud_jp/articles/7799cce9f23cf0) の 3 日目（だったはず）の記事です。  
-本記事では、GKE Autopilot 上で [Gemma2](https://blog.google/technology/developers/google-gemma-2/) をいい感じに動的にスケールするようにホストしてみます。今回は推論のユースケースをメインで扱います。  
+本記事では、[GKE Autopilot](https://cloud.google.com/kubernetes-engine/docs/concepts/autopilot-overview) 上で [Gemma2](https://blog.google/technology/developers/google-gemma-2/) をいい感じに動的にスケールするようにホストしてみます。今回は推論のユースケースをメインで扱います。  
 
 また モデルや推論ライブラリのレイヤーでのチューニングなどは（私の知識が不足しているため）扱わず、あくまでインフラ/ GKE のレイヤーで頑張ります、がもし私の認識が間違っている部分やもっとスマートにできる部分などあれば指摘してくださると喜びます。  
 
@@ -17,8 +17,8 @@ published: false
 * モデルの格納場所はさまざまな選択肢があるが、推論ワークロードであれば Hyperdisk ML がおすすめ
 
 # Gemma とは
-Gemma は Gemini と同様の研究、技術から作られた軽量なオープンモデルです。Gemini と異なり、Google の設備の外でも使っていただくことが可能です（商用利用も可）。  
-今回は数ある Gemma ファミリーのなかでも新世代のテキスト生成モデルである Gemma2 を [GKE Autopilot](https://cloud.google.com/kubernetes-engine/docs/concepts/autopilot-overview) 上で動かしてみます。　  
+Gemma は Gemini と同様の研究、技術から作られた軽量なオープンモデル ファミリーです。Gemini と異なり、Google の設備の外でも使っていただくことが可能です（商用利用も可）。  
+今回は数ある Gemma ファミリーのなかでも新世代のテキスト生成モデルである Gemma2 を GKE Autopilot 上で動かしてみます。　  
 GKE Autopilot はフルマネージドな Kubernetes で、Node の管理をすることなくクラスタの運用負荷を下げることができます。GKE Autopilot での GPU 利用の特徴などについては以前に以下の記事でまとめましたので、興味のある方はご覧になってください。  
 https://zenn.dev/google_cloud_jp/articles/gke-autopilot-gpu-101
 
@@ -31,10 +31,10 @@ Gemma などオープンモデルを自前でホストするモチベーショ�
 * オンプレミスなどクラウド外でホストしたい、など  
 
 # まずはシンプルな構成でデプロイしてみる
-ではまず、ほぼ[公式のチュートリアル](https://docs.google.com/spreadsheets/d/19zB1ava6HTmngeTo5gc1lLKM6VgQx9nKk1ueptoWszI/edit?resourcekey=0-aJQQBNTe07pHv_h6eYbxGg&gid=0#gid=0)通りに Gemma2 をデプロイします。推論ライブラリとしては [vLLM](https://docs.vllm.ai/en/latest/) を利用し同期的に推論させます。  
+ではまず、ほぼ[公式のチュートリアル](https://cloud.google.com/kubernetes-engine/docs/tutorials/serve-gemma-gpu-vllm)通りに Gemma2 をデプロイします。推論ライブラリとしては [vLLM](https://docs.vllm.ai/en/latest/) を利用し同期的に推論させます。  
 
 ## Hugging Face のアクセストークンを取得する
-まず Hugging Face のアクセストークンを取得します。Hugging Face のアカウントを作っていない場合は事前に作成しておきます。  
+まず [Hugging Face](https://huggingface.co/) のアクセストークンを取得します。Hugging Face のアカウントを作っていない場合は事前に作成しておきます。  
 1. [Your Profile] > [Settings] > [Access Tokens] の順にクリック
 2. [New Token] を選択
 3. 任意の名前と「Read」以上のロールを指定
@@ -44,7 +44,7 @@ Gemma などオープンモデルを自前でホストするモチベーショ�
 ## GKE クラスタのデプロイ
 まず必要な環境変数を設定します。
 ```bash
-gcloud config set project <PROJECT_ID> #利用する Project ID を入力
+gcloud config set project <PROJECT_ID> # 利用する Project ID を入力
 export PROJECT_ID=$(gcloud config get project)
 export REGION=asia-northeast1
 export ZONE=asia-northeast1-a
@@ -52,14 +52,14 @@ export CLUSTER_NAME=vllm
 export HF_TOKEN=<HF_TOKEN> # 取得した Hugging Face のアクセストークンを入力
 ```
 
-GKE Autopilot クラスタをデプロイします。GPU メトリクス収集のため、マネージドな [DCGM Exporter](https://cloud.google.com/kubernetes-engine/docs/how-to/dcgm-metrics#what-is-dcgm) も事前にデプロイしておきます(`--monitoring=SYSTEM,DCGM`)。  
+GKE Autopilot クラスタをデプロイします。GPU メトリクス収集のため、マネージドな [DCGM Exporter](https://cloud.google.com/kubernetes-engine/docs/how-to/dcgm-metrics#what-is-dcgm) も事前にデプロイしておきます。  
 ```bash
 gcloud container clusters create-auto ${CLUSTER_NAME} \
   --project=${PROJECT_ID} \
   --region=${REGION} \
   --release-channel=regular \
   --cluster-version=1.30 \
-  --monitoring=SYSTEM,DCGM
+  --monitoring=SYSTEM,DCGM # DCGM Exporter のデプロイ
 ```
 
 ## Hugging Face 認証用の Secret を作成する
@@ -73,6 +73,7 @@ kubectl create secret generic hf-secret \
 ## vLLM Pod をデプロイする
 以下のマニフェストを使って vLLM Pod をデプロイします。コンテナイメージは Artifact Registry リポジトリ上のものを使います。  
 モデルは [Gemma2 9B](https://huggingface.co/google/gemma-2-9b) を選択し、2つの NVIDIA L4 GPU 上で並列推論させます。  
+以下のマニフェストを apply し、Pod が `Running` になるまで数分〜10分程度待ちます。  
 ```yaml:vllm-gemma2.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -126,20 +127,8 @@ spec:
       nodeSelector:
         cloud.google.com/gke-accelerator: nvidia-l4
 ```
-
-上記のマニフェストを apply します。
 ```bash
 kubectl apply -f vllm-gemma2.yaml
-```
-
-Pod が `Running` になるまで待ちます。数分かかります。
-```bash
-# get pods の結果を貼り付ける
-```
-
-kubectl describe をすると、大体立ち上がりまでに◯◯分かかったことが分かります。
-```bash
-# kubectl describe pod の結果を貼り付ける
 ```
 
 Port Forwarding し、ローカルからプロンプトを送り正常に動作するか確認します。
@@ -234,7 +223,7 @@ Cloud Monitoring で vLLM のメトリクスを確認すると、`vllm:num_reque
 
 # HPA を設定し動的にスケールさせる
 現状のリソース構成だと 10 RPS も捌けないようなので、リクエスト数に応じて vLLM Pod を自動スケールさせるよう HPA を構成します。  
-今回は GPU 利用率などのメトリクスではなく vLLM のメトリクスをベースに自動スケールできるよう構成します。  
+今回は GPU 利用率などのインフラのメトリクスではなく vLLM のメトリクスをベースに自動スケールできるよう構成します。  
 ![](/images/gemma2-on-gke/architecture-2.png)
 
 ## Stackdriver Adapter をデプロイする
@@ -243,7 +232,7 @@ Cloud Monitoring で vLLM のメトリクスを確認すると、`vllm:num_reque
 kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/k8s-stackdriver/master/custom-metrics-stackdriver-adapter/deploy/production/adapter_new_resource_model.yaml
 ```
 
-Workload Identity Federation for GKE により、Stackdriver Adapter のサービスアカウントに Cloud Monitoring Viewer の権限を付与します。  
+[Workload Identity Federation for GKE](https://cloud.google.com/kubernetes-engine/docs/concepts/workload-identity) により、Stackdriver Adapter のサービスアカウントに Cloud Monitoring Viewer の権限を付与します。  
 ```bash
 export PROJECT_NUM=$(gcloud projects describe ${PROJECT_ID} --format="value(projectNumber)")
 
@@ -252,7 +241,8 @@ gcloud projects add-iam-policy-binding projects/"$PROJECT_ID" \
   --member=principal://iam.googleapis.com/projects/$PROJECT_NUMBER/locations/global/workloadIdentityPools/"$PROJECT_ID".svc.id.goog/subject/ns/custom-metrics/sa/custom-metrics-stackdriver-adapter
 ```
 
-以下のマニフェストを apply し vLLM Pod の自動スケールを構成します。今回は `vllm:num_requests_running` メトリクスを参照し処理するリクエスト数に応じて Pod を動的にスケールさせます。  
+## HPA を設定する
+以下のマニフェストを apply し vLLM Pod の自動スケールを構成します。今回は `vllm:num_requests_running` メトリクスを参照し、処理するリクエスト数に応じて Pod を動的にスケールさせます。  
 ```yaml:hpa-gemma2.yaml
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -291,23 +281,27 @@ Bytes Out     [total, mean]                     287640, 47.94
 Success       [ratio]                           20.40%
 Status Codes  [code:count]                      0:4776  200:1224 
 ```
-`vllm:num_requests_waiting` も若干減っているものの、大きく変わりはなさそうです。  
+`vllm:num_requests_waiting` も若干減っているものの、大きな違いはなさそうです。  
 ![](/images/gemma2-on-gke/result-2-0.png)
 
 Pod を確認すると HPA は動いているものの、10分という時間内には全ての Pod が作成できていません。  
 ![](/images/gemma2-on-gke/result-2-1.png)
 
-実行されている Pod を describe してみると、コンテナイメージの Pull に約 5 分かかっていることが分かります。これは vLLM コンテナイメージのサイズが大きいことが要因です。特に GKE Autopilot では Pod のデプロイ・削除に合わせて Node が動的にスケールするため、Node 上にコンテナイメージのキャッシュが存在しないことが多く、イメージの新規 Pull が発生しやすいです。  
+実行されている Pod を describe してみると、コンテナイメージの Pull に約 5 分かかっていることが分かります。  
+これは vLLM コンテナイメージのサイズが大きいことが要因です。  
+特に GKE Autopilot では Pod のデプロイ・削除に合わせて Node が動的にスケールするため、Node 上にコンテナイメージのキャッシュが存在しないことが多く、イメージの新規 Pull が発生しやすいです。  
 ![](/images/gemma2-on-gke/result-2-2.png)
 
 # コンテナの起動速度を早める
-では現在時間がかかってしまっているコンテナイメージの Pull 速度を改善しましょう。  
+では現在時間がかかってしまっているコンテナイメージの起動速度を改善しましょう。  
 GKE にはコンテナの起動速度を早める方法が複数あります。  
 1. [イメージストリーミング](https://cloud.google.com/kubernetes-engine/docs/how-to/image-streaming)
-2. [セカンダリブートディスクによるイメージのプリローディング]((https://cloud.google.com/kubernetes-engine/docs/how-to/data-container-image-preloading))
+2. [セカンダリブートディスクによるイメージのプリローディング](https://cloud.google.com/kubernetes-engine/docs/how-to/data-container-image-preloading)
 ![](/images/gemma2-on-gke/container-startup.png)
 
-`イメージストリーミング`はコンテナイメージをリモートマウントしコンテナの起動を早める機能です。実は本機能は GKE Autopilot ではデフォルトで有効化されていますが、仕様としてコンテナイメージのリポジトリ (Artifact Regsitry) が GKE クラスタと同じリージョンである必要があるため今回は効いていません (US のリポジトリ上のイメージを東京の GKE クラスタから Pull してくる構成のため)。  
+`イメージストリーミング`はコンテナイメージをリモートマウントしコンテナの起動を早める機能です。  
+実は本機能は GKE Autopilot ではデフォルトで有効化されているのですが、仕様としてコンテナイメージのリポジトリ (Artifact Regsitry) が GKE クラスタと同じリージョンである必要があるため今回は効いていません (US のリポジトリ上のイメージを東京の GKE クラスタから Pull してくる構成のため)。  
+
 `イメージのプリローディング`は、セカンダリブートディスクという機能を活用し、対象のコンテナイメージをディスクにあらかじめ焼き込んでおくことで、アタッチされたブロックデバイスから高速にイメージを立ち上げることができます。  
 
 セカンダリブートディスクはイメージサイズが大きくなってもイメージの読み込み時間が増加しにくい[^1]ため、今回はセカンダリブートディスクによるプリローディングを試します。  
@@ -330,7 +324,7 @@ go run ./cli \
 --timeout=60m
 ```
 
-下記リソースを作成し、GKE Autopilot に上記で作成したイメージをアタッチ可能なリソースとして定義します。`${PROJECT_ID}` の部分は自分の環境の Project ID に置き換えます。  
+下記リソースを作成し、上記で作成したイメージを GKE クラスタにアタッチ可能なリソースとして定義します。`${PROJECT_ID}` の部分は自分の環境の Project ID に置き換えます。  
 ```yaml:allowlist-disk.yaml
 apiVersion: "node.gke.io/v1"
 kind: GCPResourceAllowlist
@@ -386,7 +380,7 @@ vLLM コンテナの初期化処理は、ログを確認すると Pod の立ち�
 現在は（おそらく）モデルを Hugging Face から vLLM コンテナにダウンロードしてきていると思うので、これをローカルから読み込むことで改善しないか確認してみます。  
 
 ## モデルの置き場所の検討
-最後に改善策としてモデルの置き場所を考えてみます。GKE では Google Cloud の各種ストレージサービスと統合されており、マネージドな CSI ドライバを経由し動的にストレージの管理が可能となっています。  
+ではモデルの置き場所を考えてみます。GKE では Google Cloud の各種ストレージサービスと統合されており、マネージドな CSI ドライバを経由し動的にストレージの管理が可能となっています。  
 ![](/images/gemma2-on-gke/gke-storage.png)
 
 その中でも推論時のモデルの扱いとして**多数のノードから読み込まれる**ことがメインであることを考えると、候補としては以下が考えられます。  
@@ -600,7 +594,7 @@ Hyperdisk ML なしの構成の場合は Pod の立ち上がりから `Applicati
 今回はこのような差ですが、これはモデルが大きいほど短縮に貢献できるのではないかと考えられます。  
 
 # 今回触れられなかったこと
-今回は時間や文字数の関係上触れられませんでしたが、推論ワークロードやプラットフォームの最適化/改善ポイントはまだあります。今後機会があれば触れるかもしれません。　　
+今回は時間や文字数の関係上触れられませんでしたが、以下のような推論ワークロードやプラットフォームの最適化/改善ポイントはまだあります。今後機会があれば触れるかもしれません。　　
 * モデルや推論ライブラリのチューニング。私は詳しくありませんが、以下のドキュメントが参考になると思います。
   * [Best practices for optimizing large language model inference with GPUs on Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/docs/best-practices/machine-learning/inference/llm-optimization)
   * [vLLM - Performance and Tuning](https://docs.vllm.ai/en/latest/usage/performance.html)
