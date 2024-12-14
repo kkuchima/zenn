@@ -1,5 +1,5 @@
 ---
-title: "Gemma2 + vLLM を GKE 上でいい感じに動かしたい（推論編）"
+title: "Gemma2 + vLLM を GKE 上でいい感じにスケールさせたい"
 emoji: "🤖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [GCP, GoogleCloud, GKE, Gemma, 生成AI]
